@@ -11,18 +11,18 @@
     <header class="bg-blue-900 text-white py-4 shadow">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Allocate Dashboard</h1>
+                <h1 class="text-2xl font-bold">Teacher's Appointment Letter Generation System, BTR</h1>
             </div>
 
             <!-- Tabs -->
             <div class="mt-4 flex space-x-4 border-b border-blue-700">
                 <a href="{{ route('operator.index') }}" id="tabCandidate"
                     class="py-2 px-4 text-sm font-medium border-b-2 border-white focus:outline-none">
-                    Candidate
+                    Candidates
                 </a>
                 <a href="{{ route('operator.CurrentVacency') }}" id="tabRemaining"
                     class="py-2 px-4 text-sm font-medium border-b-2 border-transparent hover:border-white focus:outline-none">
-                    Current Vacency
+                    Vacency
                 </a href="">
             </div>
         </div>
@@ -47,28 +47,28 @@
         </div>
     @else
         <!-- Main Content -->
-        <main class="max-w-7xl mx-auto px-4 py-6">
+        <main class="max-w-7xl w-full mx-auto px-4 py-6">
             <div class="mb-6">
-                <h2 class="text-xl font-semibold text-blue-800">Vacancy Records Overview</h2>
+                <h2 class="text-xl font-semibold text-blue-800">Overview</h2>
             </div>
 
             <!-- DataTable -->
-            <div class="bg-white shadow rounded-lg overflow-x-auto">
-                <table id="vacancyTable" class="stripe hover w-full text-sm text-left">
-                    <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
+            <div class="bg-white shadow border p-2 overflow-x-auto">
+                <table id="candidateTable" class="stripe hover w-full text-sm text-left">
+                    <thead class="bg-blue-100 text-blue-800 uppercase text-sm font-bold uppercase">
                         <tr>
-                            <th>rollNumber</th>
-                            <th>post</th>
-                            <th>name</th>
-                            <th>subject</th>
-                            <th>address</th>
-                            <th>district</th>
-                            <th>category</th>
-                            <th>isAllocated</th>
+                            <th>Roll No.</th>
+                            <th>Post</th>
+                            <th>Candidate Name</th>
+                            <th>Subject</th>
+                            <th>Address</th>
+                            <th>District</th>
+                            <th>Stream</th>
+                            <th>Allotted Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="uppercase">
                         @foreach ($resData['candidateData'] ?? [] as $data)
                             <tr>
                                 <td>{{ $data->rollNumber ?? null }}</td>
@@ -83,8 +83,8 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('operator.searchCandRoll', ['candRoll' => Crypt::encryptString($data->rollNumber ?? null)]) }}"
-                                        class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">
-                                        Check
+                                        class="text-blue-600 px-3 py-1 rounded hover:underline text-xs">
+                                        Details
                                     </a>
 
                                 </td>

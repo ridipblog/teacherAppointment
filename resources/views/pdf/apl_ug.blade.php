@@ -49,7 +49,7 @@
 
     <p><strong>No. DE/BTC/Aptt-2/GT/2025/<span class="underline">{{$candDetails->letterCode ?? ''}}</span></strong> In exercise of power conferred upon the Director of Education,
         BTC, Kokrajhar by the Secretary, BTC, Kokrajhar vide letter No. BTC/Edn(El)-35/2005/1, dated, 13-09-2005 and in
-        pursuance of approval of BTC vide letter No. __________, subject to discharge at any time without notice and
+        pursuance of approval of BTC vide letter No. BTC/Edn-04/2021-22/505, dated 17-06-2025, subject to discharge at any time without notice and
         without assigning any reason thereof Sri <span class="underline">{{$candDetails->name ?? ''}}</span>, S/o, D/o, W/o, Sri <span class="underline">{{$candDetails->fatherName ?? ''}}</span>, Address
         <span class="underline">{{$candDetails->address}}</span>, Dist. <span class="underline">{{$candDetails->district ?? ''}}</span> is hereby appointed as Asstt. Teacher (
         <span class="underline"> {{($candDetails->vacency_details->school_vacency->medium ?? '') ? '' . $candDetails->vacency_details->school_vacency->medium . ', ' : ''}}</span>

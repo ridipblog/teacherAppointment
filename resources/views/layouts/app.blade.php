@@ -10,7 +10,7 @@
 
     @yield('extraCss')
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
 
     @yield('content')
 

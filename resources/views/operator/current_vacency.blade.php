@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('refressMeta')
-    <meta http-equiv="refresh" content="3">
+    <meta http-equiv="refresh" content="30">
 @endsection
 @section('title', 'Operator Dashboard')
 
@@ -13,23 +13,22 @@
     <header class="bg-blue-900 text-white py-4 shadow">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Allocate Dashboard</h1>
+                <h1 class="text-2xl font-bold">Teacher's Appointment Letter Generation System, BTR</h1>
             </div>
 
             <!-- Tabs -->
             <div class="mt-4 flex space-x-4 border-b border-blue-700">
                 <a href="{{ route('operator.index') }}" id="tabCandidate"
-                    class="py-2 px-4 text-sm font-medium border-b-0 hover:border-b-2  focus:outline-none">
-                    Candidate
+                    class="py-2 px-4 text-sm font-medium border-b-2 border-transparent hover:border-white focus:outline-none">
+                    Candidates
                 </a>
                 <a href="{{ route('operator.CurrentVacency') }}" id="tabRemaining"
-                    class="py-2 px-4 text-sm font-medium border-b-2 border-transparent border-white focus:outline-none">
-                    Current Vacency
+                    class="py-2 px-4 text-sm font-medium border-b-2 border-white focus:outline-none">
+                    Vacency
                 </a href="">
             </div>
         </div>
     </header>
-
     @if (($resData['statusCode'] ?? 400) == 400)
         <div class="max-w-md mx-auto">
             <div
@@ -57,8 +56,8 @@
             <!-- Flex container for two tables -->
             <div class="flex flex-col lg:flex-row gap-6">
                 <!-- First Table -->
-                <div class="bg-white shadow rounded-lg overflow-x-auto w-full lg:w-1/2">
-                    <table id="vacancyTable" class="stripe hover w-full text-sm text-left">
+                <div class="bg-white shadow border p-2 overflow-x-auto w-full lg:w-1/2">
+                    <table id="vacancyTable" class="stripe hover w-full text-sm text-left uppercase">
                         <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
                             <tr>
                                 <th>School Code</th>
@@ -83,8 +82,8 @@
                 </div>
 
                 <!-- Second Table (duplicate layout for example) -->
-                <div class="bg-white shadow rounded-lg overflow-x-auto w-full lg:w-1/2">
-                    <table id="vacancyTable2" class="stripe hover w-full text-sm text-left">
+                <div class="bg-white shadow border p-2 overflow-x-auto w-full lg:w-1/2">
+                    <table id="vacancyTable2" class="stripe hover w-full text-sm text-left uppercase">
                         <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
                             <tr>
                                 <th>School Code</th>

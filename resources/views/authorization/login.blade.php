@@ -5,10 +5,10 @@
 @section('content')
 
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md border-t-4 border-blue-900">
-            <div class="mb-6 text-center">
-                <h1 class="text-2xl font-bold text-blue-900">Government Portal Login</h1>
-                <p class="text-sm text-gray-600">Secure Access for Authorized Users</p>
+        <div class="bg-white shadow-lg rounded-2xl p-12 w-full max-w-xl w-full border-t-4 border-blue-900">
+            <div class="mb-12 text-center">
+                <h1 class="text-3xl font-bold text-blue-900">Teacher's Appointment Letter Generation System, BTR</h1>
+                <p class="text-sm text-gray-600">Secure access for authorized users</p>
             </div>
 
             <form id="login-form">
@@ -28,7 +28,7 @@
 
                 <!-- Login Button -->
                 <button type="submit"
-                    class="w-full bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition duration-300"
+                    class="w-full bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition duration-300 my-6"
                     id="login-btn">
                     Login
                 </button>
