@@ -17,11 +17,15 @@ return new class extends Migration
             $table->string('post');
             $table->string('name');
             $table->string('fatherName');
+            $table->string('subject')->nullable();
             $table->string('address')->nullable();
             $table->string('district')->nullable();
+            $table->integer('pinCode')->nullable();
             $table->string('medium')->nullable();
             $table->string('category')->nullable();
             $table->unsignedBigInteger('allocatedSchoolCode')->nullable();
+            $table->unsignedBigInteger('generatedBy')->nullable();
+            $table->dateTime('generatedOn')->nullable();
             $table->tinyInteger('isAllocated')->default(0);
             $table->timestamps();
         });

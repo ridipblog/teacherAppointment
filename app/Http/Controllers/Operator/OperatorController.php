@@ -7,8 +7,10 @@ use App\Models\Operator\CandidateData;
 use App\Models\Operator\CurrentVacency;
 use App\Models\Operator\SchoolVacency;
 use App\Support\Reuseable;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OperatorController extends Controller
@@ -130,7 +132,9 @@ class OperatorController extends Controller
                                         CandidateData::where('rollNumber', $request->candRoll)
                                             ->update([
                                                 'allocatedSchoolCode' => $schoolCodeData->id,
-                                                'isAllocated' => 1
+                                                'isAllocated' => 1,
+                                                'generatedBy'=>Auth::user()->id,
+                                                'generatedOn'=> Carbon::now()
                                             ]);
 
                                         // *** Update school vacancy ***

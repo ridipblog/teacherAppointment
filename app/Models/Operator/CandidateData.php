@@ -15,11 +15,15 @@ class CandidateData extends Model
         'post',
         'name',
         'fatherName',
+        'subject',
         'address',
         'district',
+        'pinCode',
         'medium',
         'category',
         'allocatedSchoolCode',
+        'generatedBy',
+        'generatedOn',
         'isAllocated'
     ];
 }
