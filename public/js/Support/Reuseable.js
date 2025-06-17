@@ -1,5 +1,5 @@
-class Reuseable{
-    constructor(){
+class Reuseable {
+    constructor() {
 
     }
 
@@ -17,6 +17,21 @@ class Reuseable{
             $(process_btn).html(text);
         }
     };
+
+    // *** confirmation Swal ***
+    confirmSwal = async ($message) => {
+        return Swal.fire({
+            title: 'Are you sure?',
+            text: $message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2563EB', // Tailwind blue-600
+            cancelButtonColor: '#DC2626',  // Tailwind red-600
+            confirmButtonText: 'Yes, allocate',
+            cancelButtonText: 'Cancel'
+        });
+
+    }
 }
 
 export default Reuseable;

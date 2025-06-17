@@ -4,7 +4,11 @@ $(document).ready(function () {
 
     // *** Login Process ***
     $(document).on('submit', '#login-form', async function (e) {
-        e.preventDefault();
-        authSupportObj.userLogin('#login-form');
+        try {
+            e.preventDefault();
+            authSupportObj.userLogin('#login-form');
+        } catch (error) {
+            Swal.fire("Initialized error execute!");
+        }
     });
 });

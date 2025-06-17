@@ -29,7 +29,7 @@ class CheckAuthorized
         }
         if (!$isValidate) {
             if ($type == 'view') {
-                return redirect('/login');
+                return redirect('/');
             } else {
                 return response()->json(['status' => 301, 'message' => $message]);
             }
