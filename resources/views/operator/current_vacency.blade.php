@@ -24,7 +24,7 @@
                 </a>
                 <a href="{{ route('operator.CurrentVacency') }}" id="tabRemaining"
                     class="py-2 px-4 text-sm font-medium border-b-2 border-white focus:outline-none">
-                    Vacency
+                    Vacancy
                 </a href="">
             </div>
         </div>
