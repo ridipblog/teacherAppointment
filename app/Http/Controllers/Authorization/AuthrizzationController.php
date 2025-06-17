@@ -63,5 +63,6 @@ class AuthrizzationController extends Controller
     // ** Logout ***
     public function logout(Request $request){
         Auth::logout();
+        return redirect('/');
     }
 }
