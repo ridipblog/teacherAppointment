@@ -254,7 +254,7 @@ class OperatorController extends Controller
                                                         'isAssined' => 1
                                                     ]);
                                             });
-                                            $resData['message'] = "Allocated Successful";
+                                            $resData['message'] = "Allotment complete";
                                             $resData['statusCode'] = 200;
                                         } catch (Exception $err) {
                                             $resData['message'] = "Error in data level";

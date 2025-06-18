@@ -18,13 +18,22 @@ class OperatorSupport extends RequestSupport {
                 this.formPostReponse = async (response) => {
                     if (response?.resData?.statusCode == 200) {
                         // window.location.href = `/operator/`
-                        Swal.fire(response?.resData?.message).then((result) => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response?.resData?.message
+                        }).then((result) => {
                             if (result.isConfirmed) {
                                 location.reload();
                             }
                         });
+
                     } else if (response?.resData?.statusCode == 400) {
-                        Swal.fire(response?.resData?.message);
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Information!',
+                            text: response?.resData?.message
+                        });
                     } else {
                         Swal.fire("Something went wrong");
                     }

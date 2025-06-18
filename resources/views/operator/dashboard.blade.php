@@ -61,6 +61,7 @@
                             <th>Post</th>
                             <th>Candidate Name</th>
                             <th>Subject</th>
+                            <th>Medium</th>
                             <th>Address</th>
                             <th>District</th>
                             <th>Stream</th>
@@ -75,6 +76,7 @@
                                 <td>{{ $data->allpost->name ?? null }}</td>
                                 <td>{{ $data->name ?? null }}</td>
                                 <td>{{ $data->subject ?? null }}</td>
+                                <td>{{ $data->medium ?? null }}</td>
                                 <td>{{ $data->address ?? null }}</td>
                                 <td>{{ $data->district ?? null }}</td>
                                 <td>{{ $data->category ?? null }}</td>
