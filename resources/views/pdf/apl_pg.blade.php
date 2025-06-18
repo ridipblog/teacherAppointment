@@ -90,7 +90,7 @@
             <li>The PA/PS to the Principal Secretary, BTC, Kokrajhar</li>
             <li>The Treasury Officers, of concerned treasuries</li>
             <li>The Inspector of Schools, Kokrajhar/Chirang/Baksa/Udalguri</li>
-            <li>The Principal, _______________ School for information.</li>
+            <li>The Principal, <span class="underline">{{$candDetails->vacency_details->school_vacency->schoolName ?? ''}}  for information.</li>
             <li>The Person concerned. He/She is directed to join the school within 15 (fifteen) days from the date of
                 issue of this order failing which the appointment shall be treated as cancelled.</li>
             <li>The Office guard file.</li>
