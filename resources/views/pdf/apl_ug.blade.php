@@ -97,10 +97,10 @@
             <li>The Secretary, Department of School Education to the Govt. of Assam, Dispur, Ghy-6.</li>
             <li>The Secretary, Education Department, BTC, Kokrajhar.</li>
             <li>The Secretary, Finance Department, BTC, Kokrajhar.</li>
-            <li>The S.O. to the Hon’ble Chief, BTC, Kokrajhar</li>
-            <li>The S.O. to the Principal Secretary, BTC, Kokrajhar</li>
-            <li>The Treasury Officer, _______________</li>
-            <li>The Inspector of Schools, _______________</li>
+            <li>The S.S.O to the Hon’ble Chief, BTC, Kokrajhar</li>
+            <li>The PA/PS to the Principal Secretary, BTC, Kokrajhar</li>
+            <li>The Treasury Officers, of concerned treasuries</li>
+            <li>The Inspector of Schools, Kokrajhar/Chirang/Baksa/Udalguri</li>
             <li>The Principal/ Headmaster, _______________ School for information.</li>
             <li>The Person concerned. He/She is directed to join the school within 15 (fifteen) days from the date of
                 issue of this order failing which the appointment shall be treated as cancelled.</li>
