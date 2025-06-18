@@ -109,7 +109,7 @@ class OperatorController extends Controller
                     $resData['candDetails'] = $candDetails;
                     $resData['candRoll'] = Crypt::encryptString($candRoll);
                     if ($candDetails->isAllocated == 1) {
-                        $resData['message'] = "Candidate Already Allocated !";
+                        $resData['message'] = "Appointment Letter Generated";
                     } else {
                         $resData['posts'] = allPost::all();
                         $resData['statusCode'] = 200;
@@ -254,14 +254,14 @@ class OperatorController extends Controller
                                                         'isAssined' => 1
                                                     ]);
                                             });
-                                            $resData['message'] = "Allotment complete";
+                                            $resData['message'] = "Appointment Letter Successfully Generated";
                                             $resData['statusCode'] = 200;
                                         } catch (Exception $err) {
                                             $resData['message'] = "Error in data level";
                                         }
                                     }
                                 } else {
-                                    $resData['message'] = ($candDetails->isAllocated ?? null) == 1 ? "Candidate Already Allocated " : "Candidate Details Not Found !";
+                                    $resData['message'] = ($candDetails->isAllocated ?? null) == 1 ? "Appointment Letter Generated " : "Candidate Details Not Found !";
                                 }
                             } else {
                                 $resData['statusCode'] = 200;
@@ -323,6 +323,7 @@ class OperatorController extends Controller
                 } else {
                     $pdf = Pdf::loadView('pdf.apl_pg', compact('candDetails'));
                 }
+                $pdf->setPaper('legal', 'portrait');
                 return $pdf->download('candidate-' . ($candDetails->rollNumber ?? '00000') . '.pdf');
             } else {
                 $resData['message'] = "Candidate roll required !";

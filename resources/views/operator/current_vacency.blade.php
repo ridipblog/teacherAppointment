@@ -63,7 +63,8 @@
                                 <th>School Code</th>
                                 <th>School Name</th>
                                 <th>Post</th>
-                                <th>Vacency Category</th>
+                                <th>Medium</th>
+                                <th>Stream</th>
                                 <th>Remaing Vacency</th>
                             </tr>
                         </thead>
@@ -73,6 +74,7 @@
                                     <td>{{ $data->school_vacency->schoolCode ?? null }}</td>
                                     <td>{{ $data->school_vacency->schoolName ?? null }}</td>
                                     <td>{{ $data->school_vacency->allpost->name ?? null }}</td>
+                                    <td>{{ $data->school_vacency->medium ?? null }}</td>
                                     <td>{{ $data->school_vacency->vacencyCategory ?? null }}</td>
                                     <td>{{ $data->remaingVacency ?? 0 }}</td>
                                 </tr>
@@ -89,7 +91,7 @@
                                 <th>School Code</th>
                                 <th>School Name</th>
                                 <th>Post</th>
-                                <th>Vacency Category</th>
+                                <th>Subject</th>
                                 <th>Remaing Vacency</th>
                             </tr>
                         </thead>
