@@ -27,7 +27,8 @@ class CandidateData extends Model
         'generatedBy',
         'generatedOn',
         'isAllocated',
-        'letterCode'
+        'letterCode',
+        'active'
     ];
 
     public function allpost()

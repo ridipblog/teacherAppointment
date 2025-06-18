@@ -29,7 +29,9 @@ class OperatorController extends Controller
         ];
         try {
             $resData['candidateData'] = CandidateData::query()
-                ->with(['allpost'])->get();
+                ->with(['allpost'])
+                ->where('active',1)
+                ->get();
             $resData['statusCode'] = 200;
         } catch (Exception $err) {
             $resData['message'] = "Server error please try later ";
@@ -103,7 +105,8 @@ class OperatorController extends Controller
                 $candRoll = Crypt::decryptString($candRoll);
                 $mainQuery = CandidateData::query()
                     ->with(['allpost'])
-                    ->where('rollNumber', $candRoll);
+                    ->where('rollNumber', $candRoll)
+                    ->where('active',1);
                 if ($mainQuery->exists()) {
                     $candDetails = $mainQuery->first();
                     $resData['candDetails'] = $candDetails;
@@ -194,7 +197,9 @@ class OperatorController extends Controller
 
                                 // *** Fetched Candidate Data ***
                                 $candDetails = CandidateData::where('rollNumber', $candRoll)
-                                    ->where('post', $request->postID ?? 0)->first();
+                                    ->where('post', $request->postID ?? 0)
+                                    ->where('active',1)
+                                    ->first();
 
                                 // *** Check Candidate Not Allocate ***
                                 if ($candDetails && $candDetails->isAllocated != 1) {
@@ -315,7 +320,8 @@ class OperatorController extends Controller
                 ])
                     ->where([
                         ['rollNumber', $candRoll],
-                        ['isAllocated', 1]
+                        ['isAllocated', 1],
+                        ['active',1]
                     ])->first();
 
                 if (($candDetails->post ?? 0) == 1) {
