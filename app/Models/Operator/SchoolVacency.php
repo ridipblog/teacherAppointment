@@ -18,7 +18,8 @@ class SchoolVacency extends Model
         'medium',
         'vacencyCategory',
         'actualVacency',
-        'postID'
+        'postID',
+        'isEnabled'
     ];
 
     public function current_vecancy()

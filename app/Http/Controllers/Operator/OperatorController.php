@@ -53,22 +53,26 @@ class OperatorController extends Controller
             $resData['currentVacency'] = CurrentVacency::query()
                 ->with([
                     'school_vacency' => function ($query) {
-                        $query->where('postID', 1);
+                        $query->where('postID', 1)
+                          ->where('isEnabled',1);
                     },
                     'school_vacency.allpost'
                 ])->whereHas('school_vacency', function ($query) {
-                    $query->where('postID', 1);
+                    $query->where('postID', 1)
+                      ->where('isEnabled',1);
                 })
                 ->get();
 
             $resData['currentVacency2'] = CurrentVacency::query()
                 ->with([
                     'school_vacency' => function ($query) {
-                        $query->where('postID', 2);
+                        $query->where('postID', 2)
+                          ->where('isEnabled',1);
                     },
                     'school_vacency.allpost'
                 ])->whereHas('school_vacency', function ($query) {
-                    $query->where('postID', 2);
+                    $query->where('postID', 2)
+                      ->where('isEnabled',1);
                 })
                 ->get();
             $resData['statusCode'] = 200;
@@ -180,6 +184,7 @@ class OperatorController extends Controller
                     ])
                         ->where('schoolCode', $request->schoolCode ?? 0)
                         ->where('postID', $request->postID ?? 0)
+                      ->where('isEnabled',1)
                         ->whereHas('current_vecancy', function ($query) {});
                     // ->whereHas('vacency_details',function($query){
                     //     $query->where('isAssined',0);
@@ -210,6 +215,7 @@ class OperatorController extends Controller
                                             ->where('schoolCode', $request->schoolCode ?? 0)
                                             ->where('postID', $request->postID ?? 0)
                                             ->where('medium', $candDetails->medium)
+                                          ->where('isEnabled',1)
                                             ->where('vacencyCategory', $candDetails->category)->exists();
                                         if (!$checkProcess) {
                                             $isProcess = false;
@@ -219,6 +225,7 @@ class OperatorController extends Controller
                                         $checkProcess = SchoolVacency::query()->with([])
                                             ->where('schoolCode', $request->schoolCode ?? 0)
                                             ->where('postID', $request->postID ?? 0)
+                                          ->where('isEnabled',1)
                                             ->where('vacencyCategory', $candDetails->subject)->exists();
                                         if (!$checkProcess) {
                                             $isProcess = false;
