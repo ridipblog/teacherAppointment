@@ -14,3 +14,6 @@ Route::get('/search-cand-roll/{candRoll?}',[OperatorController::class, 'searchCa
 
 // *** Download Appoint By Cand Roll ***
 Route::get('/download-appoint/{candRoll?}',[OperatorController::class, 'downloadAppoint'])->name('operator.downloadAppoint');
+
+// *** Generate All PDF Group By Post ***
+Route::get('/generate-all-pdf',[OperatorController::class,'generateAllPdf'])->name('generate.All.PDF');

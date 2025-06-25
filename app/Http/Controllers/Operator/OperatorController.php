@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class OperatorController extends Controller
 {
@@ -30,7 +31,7 @@ class OperatorController extends Controller
         try {
             $resData['candidateData'] = CandidateData::query()
                 ->with(['allpost'])
-                ->where('active',1)
+                ->where('active', 1)
                 ->get();
             $resData['statusCode'] = 200;
         } catch (Exception $err) {
@@ -54,12 +55,12 @@ class OperatorController extends Controller
                 ->with([
                     'school_vacency' => function ($query) {
                         $query->where('postID', 1)
-                          ->where('isEnabled',1);
+                            ->where('isEnabled', 1);
                     },
                     'school_vacency.allpost'
                 ])->whereHas('school_vacency', function ($query) {
                     $query->where('postID', 1)
-                      ->where('isEnabled',1);
+                        ->where('isEnabled', 1);
                 })
                 ->get();
 
@@ -67,12 +68,12 @@ class OperatorController extends Controller
                 ->with([
                     'school_vacency' => function ($query) {
                         $query->where('postID', 2)
-                          ->where('isEnabled',1);
+                            ->where('isEnabled', 1);
                     },
                     'school_vacency.allpost'
                 ])->whereHas('school_vacency', function ($query) {
                     $query->where('postID', 2)
-                      ->where('isEnabled',1);
+                        ->where('isEnabled', 1);
                 })
                 ->get();
             $resData['statusCode'] = 200;
@@ -110,7 +111,7 @@ class OperatorController extends Controller
                 $mainQuery = CandidateData::query()
                     ->with(['allpost'])
                     ->where('rollNumber', $candRoll)
-                    ->where('active',1);
+                    ->where('active', 1);
                 if ($mainQuery->exists()) {
                     $candDetails = $mainQuery->first();
                     $resData['candDetails'] = $candDetails;
@@ -184,7 +185,7 @@ class OperatorController extends Controller
                     ])
                         ->where('schoolCode', $request->schoolCode ?? 0)
                         ->where('postID', $request->postID ?? 0)
-                      ->where('isEnabled',1)
+                        ->where('isEnabled', 1)
                         ->whereHas('current_vecancy', function ($query) {});
                     // ->whereHas('vacency_details',function($query){
                     //     $query->where('isAssined',0);
@@ -203,7 +204,7 @@ class OperatorController extends Controller
                                 // *** Fetched Candidate Data ***
                                 $candDetails = CandidateData::where('rollNumber', $candRoll)
                                     ->where('post', $request->postID ?? 0)
-                                    ->where('active',1)
+                                    ->where('active', 1)
                                     ->first();
 
                                 // *** Check Candidate Not Allocate ***
@@ -215,7 +216,7 @@ class OperatorController extends Controller
                                             ->where('schoolCode', $request->schoolCode ?? 0)
                                             ->where('postID', $request->postID ?? 0)
                                             ->where('medium', $candDetails->medium)
-                                          ->where('isEnabled',1)
+                                            ->where('isEnabled', 1)
                                             ->where('vacencyCategory', $candDetails->category)->exists();
                                         if (!$checkProcess) {
                                             $isProcess = false;
@@ -225,7 +226,7 @@ class OperatorController extends Controller
                                         $checkProcess = SchoolVacency::query()->with([])
                                             ->where('schoolCode', $request->schoolCode ?? 0)
                                             ->where('postID', $request->postID ?? 0)
-                                          ->where('isEnabled',1)
+                                            ->where('isEnabled', 1)
                                             ->where('vacencyCategory', $candDetails->subject)->exists();
                                         if (!$checkProcess) {
                                             $isProcess = false;
@@ -328,7 +329,7 @@ class OperatorController extends Controller
                     ->where([
                         ['rollNumber', $candRoll],
                         ['isAllocated', 1],
-                        ['active',1]
+                        ['active', 1]
                     ])->first();
 
                 if (($candDetails->post ?? 0) == 1) {
@@ -344,5 +345,59 @@ class OperatorController extends Controller
         } catch (Exception $err) {
             $resData['message'] = "Server error please try later !";
         }
+    }
+
+    // *** Generate All PDF ***
+    public function generateAllPdf(REquest $request)
+    {
+        dd("No process");
+        ini_set('max_execution_time', 600); // or higher like 600
+
+        $allAppointData = CandidateData::query()->with([
+            'vacency_details' => function ($query) {
+                $query->select(
+                    'id',
+                    'schoolCode',
+                    'replcedPersion'
+                );
+            },
+            'vacency_details.school_vacency' => function ($query) {
+                $query->select(
+                    'id',
+                    'schoolName',
+                    'schoolCode',
+                    'vacencyCategory',
+                    'medium'
+                );
+            }
+        ])
+            ->where([
+                // ['rollNumber', $candRoll],
+                ['isAllocated', 1],
+                ['active', 1]
+            ])->get()->groupBy('post');
+
+        $pdfBlades = [
+            '1' => 'pdf.apl_ug',
+            '2' => 'pdf.apl_pg'
+        ];
+        foreach ($allAppointData as $postWise) {
+            $pdfBlade = $pdfBlades[$postWise[0]->post ?? 0] ?? null;
+            if (!$pdfBlade) {
+                break;
+            }
+            foreach ($postWise as $candDetails) {
+                $pdf = Pdf::loadView("{$pdfBlade}", compact('candDetails'));
+                $pdf->setPaper('legal', 'portrait');
+
+                $content = $pdf->download()->getOriginalContent();
+
+                $fileName = ($candDetails->rollNumber ?? 'unknowns' ).'.pdf';
+
+                // Store in 'public' disk
+                Storage::disk('public')->put("pdfs/{$pdfBlade}/{$fileName}", $content);
+            }
+        }
+        dd("OK");
     }
 }

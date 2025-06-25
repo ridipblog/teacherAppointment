@@ -52,7 +52,7 @@
         pursuance of approval of BTC vide letter No. BTC/Edn-04/2021-22/505, dated 17-06-2025, subject to discharge at
         any time without notice and without assigning any reason thereof Sri <span class="underline">{{$candDetails->name ?? ''}}</span>, S/o,/D/o,/W/o, Sri
         <span class="underline">{{$candDetails->fatherName ?? ''}}</span>, Address <span class="underline">{{$candDetails->address}}</span>, Dist. <span class="underline">{{$candDetails->district ?? ''}}</span> is hereby appointed as Post Graduate Teacher in
-        <span class="underline">{{($candDetails->vacency_details->school_vacency->vacencyCategory ?? '') ? ($candDetails->vacency_details->school_vacency->vacencyCategory ?? '') . ',' : ($candDetails->vacency_details->school_vacency->vacencyCategory ?? '') }}</span> <span class="underline"> {{ $candDetails->vacency_details->school_vacency->medium }} </span> in the scale of pay (PB-2) Rs. 22,000/- to Rs. 97,000/- and Grade pay Rs. 11,800/- p.m. plus other
+        <span class="underline">{{($candDetails->vacency_details->school_vacency->vacencyCategory ?? '') ? ($candDetails->vacency_details->school_vacency->vacencyCategory ?? '') . ',' : ($candDetails->vacency_details->school_vacency->vacencyCategory ?? '') }}</span> <span class="underline"> {{ $candDetails->vacency_details->school_vacency->medium }} </span> in the scale of pay (PB-3) Rs. 22,000/- to Rs. 97,000/- and Grade pay Rs. 11,800/- p.m. plus other
         allowances as admissible under the Govt. rule and posted at <span class="underline">{{$candDetails->vacency_details->school_vacency->schoolName ?? ''}}</span>, vice <span class="underline">{{$candDetails->vacency_details->replcedPersion ?? ''}}</span>,
         Retired/Expired/VRS/Transferred.</p>
 
