@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "50a9cf43c3c522104b200bfdbe2e0e54",
+    "content-hash": "8e32f77f5205cd4b3b6e1b9d003a9917",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -142,6 +142,44 @@
                 }
             ],
             "time": "2025-02-28T13:11:00+00:00"
+        },
+        {
+            "name": "buglock/rolepermissionmodule",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ridipblog/buglocks.git",
+                "reference": "64aa1346a15881c6df98c703072d1fca8a634f11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ridipblog/buglocks/zipball/64aa1346a15881c6df98c703072d1fca8a634f11",
+                "reference": "64aa1346a15881c6df98c703072d1fca8a634f11",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BugLock\\rolePermissionModule\\BuglockServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BugLock\\rolePermissionModule\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Role and Permission manement module",
+            "support": {
+                "issues": "https://github.com/ridipblog/buglocks/issues",
+                "source": "https://github.com/ridipblog/buglocks/tree/v1.0.2"
+            },
+            "time": "2025-06-09T15:43:42+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
