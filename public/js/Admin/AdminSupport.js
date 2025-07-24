@@ -5,16 +5,31 @@ class AdminSupport extends RequestSupport {
     constructor() {
         super();
     }
-    addSchoolVacency = async (form) => {
+    addSchoolVacency = async (form, requestType) => {
         try {
             reuseableObj.processingStatus('#subject-school-vacency');
             var form_data = new FormData($(form)[0]);
+            form_data.append('requestType', requestType);
             this.formPostReponse = async (response) => {
-                console.log(response);
                 if (response?.resData?.statusCode == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response?.resData?.message,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    });
 
                 } else if (response?.resData?.statusCode == 400) {
-                    Swal.fire(response?.resData?.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Success',
+                        text: response?.resData?.message,
+                        confirmButtonText: 'OK'
+                    })
                 } else {
                     Swal.fire("Something went wrong");
                 }
