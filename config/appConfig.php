@@ -1,8 +1,14 @@
 <?php
 
 return [
-    'posts'=>[
-        '1'=>'Graduate Teacher',
-        '2'=>'Post Graduate Teacher'
+    'posts' => [
+        '1' => 'Graduate Teacher',
+        '2' => 'Post Graduate Teacher'
+    ],
+    'forms' => [
+        'add',
+        'update',
+        'view',
+        'delete'
     ],
 ];

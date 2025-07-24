@@ -50,7 +50,7 @@ $(document).ready(function () {
     $(document).on('submit', '#add-school-vacency-form', async function (e) {
         try {
             e.preventDefault();
-            adminSupportObj.addSchoolVacency('#add-school-vacency-form', 'add');
+            adminSupportObj.addSchoolVacency('#add-school-vacency-form', '#add-school-vacency-btn', 'add');
         } catch (error) {
             Swal.fire("Can not add vacency, Initialized error execute!");
         }
@@ -60,9 +60,27 @@ $(document).ready(function () {
     $(document).on('submit', '#update-school-vacency-form', async function (e) {
         try {
             e.preventDefault();
-            adminSupportObj.addSchoolVacency('#update-school-vacency-form', 'update');
+            adminSupportObj.addSchoolVacency('#update-school-vacency-form', '#update-school-vacency-btn', 'update');
         } catch (error) {
             Swal.fire("Can not update vacency, Initialized error execute!");
+        }
+    });
+
+    // *** Delete Vacency Details Row ***
+    $(document).on('click', '#delete-vacency-details', async function () {
+        try {
+            adminSupportObj.deleteVacencyDetailsRow($(this));
+        } catch (error) {
+            Swal.fire("Can not delete vacency row, Initialized error execute!");
+        }
+    });
+
+    // *** Delete School Details ***
+    $(document).on('click', '#delete-school-vacency-btn', async function () {
+        try {
+            adminSupportObj.deleteSchoolDetails($(this));
+        } catch (error) {
+            Swal.fire("Can not delete school details, Initialized error execute!");
         }
     });
 });

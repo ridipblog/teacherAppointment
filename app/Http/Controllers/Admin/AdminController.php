@@ -32,20 +32,27 @@ class AdminController extends Controller
             'isError' => false,
             'message' => null,
             'data' => null,
-            'schoolCode' => $schoolCode
+            'schoolCode' => $schoolCode,
+            'form' => $form
         ];
         try {
-            if ($schoolCode) {
-                $schoolCode = Crypt::decryptString($schoolCode);
-                $viewData['data'] = SchoolVacency::query()
-                    ->with([
-                        'vacency_details',
-                        'allpost'
-                    ])->where('id', $schoolCode)
-                    ->first();
+            $formConfig = config('appConfig.forms');
+            if (!in_array($form, $formConfig)) {
+                $viewData['isError'] = true;
+                $viewData['message'] = 'Form is not found !';
+            } else {
+                if ($form != 'add' && $schoolCode) {
+                    $schoolCode = Crypt::decryptString($schoolCode);
+                    $viewData['data'] = SchoolVacency::query()
+                        ->with([
+                            'vacency_details',
+                            'allpost'
+                        ])->where('id', $schoolCode)
+                        ->first();
 
-                $viewData['isError'] = $viewData['data'] ? false : true;
-                $viewData['message'] = $viewData['data'] ? null : 'No data found ';
+                    $viewData['isError'] = $viewData['data'] ? false : true;
+                    $viewData['message'] = $viewData['data'] ? null : 'No data found ';
+                }
             }
         } catch (Exception $err) {
             $viewData['isError'] = true;
@@ -232,7 +239,139 @@ class AdminController extends Controller
                 ]);
             }
         } catch (Exception $err) {
-            dd($err);
+            $resData['message'] = 'Server error please try later .';
+            return response()->json([
+                'resData' => $resData
+            ]);
+        }
+    }
+
+    // *** Delete VacencyRow ****
+    public function deleteVacencyDetails(Request $request)
+    {
+        $resData = [
+            'statusCode' => 400,
+            'message' => null,
+        ];
+
+        try {
+            $incomming_data = [
+                'schoolCodeId' => 'required',
+                'vacencyRowId' => 'required'
+            ];
+
+            // *** Validate All Fields ***
+            $validate = $this->validateFields($request, $incomming_data, $request->all());
+            if ($validate->fails()) {
+                $resData['message'] = "All fields are required !";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            $this->schoolCodeId = $request->schoolCodeId;
+            $this->vacencyDetailsId = $request->vacencyRowId;
+
+            try {
+                DB::beginTransaction();
+
+                // *** Delete vacency detail row ***
+                $rowStatus = $this->deleteVacencyRow();
+                if (!$rowStatus['status']) {
+                    $resData['message'] = $rowStatus['message'] ?? 'Data are not update for an issue .';
+                    return response()->json([
+                        'resData' => $resData
+                    ]);
+                }
+
+                // *** Update Actual Vacency on school vacency ***
+                if ($this->updateVacency()) {
+
+                    // *** Update reminaing vacency ***
+                    if ($this->updateRemaingVacency()) {
+                        DB::commit();
+                        $resData['message'] = 'Successfully removed vacency details .';
+                        $resData['statusCode'] = 200;
+                        return response()->json([
+                            'resData' => $resData
+                        ]);
+                    }
+                }
+
+                $resData['message'] = 'Error while delete Vacency Details .';
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            } catch (Exception $err) {
+                DB::rollBack();
+                $resData['message'] = 'Error while delete Vacency Details .';
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+        } catch (Exception $err) {
+            $resData['message'] = 'Server error please try later .';
+            return response()->json([
+                'resData' => $resData
+            ]);
+        }
+    }
+
+    // *** Delete school details ****
+    public function deleteSchoolDetails(Request $request)
+    {
+        $resData = [
+            'statusCode' => 400,
+            'message' => null,
+        ];
+
+        try {
+            $incomming_data = [
+                'schoolCodeId' => 'required'
+            ];
+
+            // *** Validate All Fields ***
+            $validate = $this->validateFields($request, $incomming_data, $request->all());
+            if ($validate->fails()) {
+                $resData['message'] = "School code is required";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            $this->schoolCodeId = $request->schoolCodeId;
+
+            try {
+                DB::beginTransaction();
+
+                // *** Delete school detail ***
+                $dataSet = SchoolVacency::find($this->schoolCodeId);
+                if ($dataSet) {
+                    $dataSet->current_vecancy?->delete();
+                    $dataSet->vacency_details()->delete();
+                    $dataSet->delete();
+
+                    DB::commit();
+
+                    $resData['message'] = 'Successfully removed vacency details .';
+                    $resData['statusCode'] = 200;
+                    return response()->json([
+                        'resData' => $resData
+                    ]);
+                }
+
+                $resData['message'] = 'Error while delete School Details .';
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            } catch (Exception $err) {
+                DB::rollBack();
+                $resData['message'] = 'Error while delete School Details .';
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+        } catch (Exception $err) {
             $resData['message'] = 'Server error please try later .';
             return response()->json([
                 'resData' => $resData

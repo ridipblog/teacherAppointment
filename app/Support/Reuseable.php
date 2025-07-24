@@ -3,7 +3,9 @@
 namespace App\Support;
 
 use App\Models\Operator\CandidateData;
+use App\Models\Operator\CurrentVacency;
 use App\Models\Operator\SchoolVacency;
+use App\Models\Operator\VacencyDetails;
 use Illuminate\Support\Facades\Validator;
 
 trait Reuseable
@@ -161,5 +163,50 @@ trait Reuseable
             'bindings' => $bindings,
             'newVacencyDetails' => $newVacencyDetails
         ];
+    }
+
+
+    // *** delete Vacency Details and check row assigned or not ***
+    public function deleteVacencyRow()
+    {
+        $deleteVacency = VacencyDetails::where('id', $this->vacencyDetailsId)
+            ->where('schoolCode', $this->schoolCodeId)
+            ->first();
+        if ($deleteVacency) {
+
+            // *** check it is already assigned or not ***
+            if (($deleteVacency->isAssined ?? 1) != 1) {
+
+                // *** Delete vacency row ***
+                $status = $deleteVacency->delete();
+                return [
+                    'status' => $status,
+                ];
+            }
+            return [
+                'status' => false,
+                'message' => 'It is already assigned vacency .'
+            ];
+        }
+        return [
+            'status' => false,
+            'message' => 'No data found'
+        ];
+    }
+
+    // *** Update actual vacency ***
+    public function updateVacency()
+    {
+        $status = SchoolVacency::where('id', $this->schoolCodeId)
+            ->decrement('actualVacency');
+        return $status;
+    }
+
+    // *** Update Remaining vacency ***
+    public function updateRemaingVacency()
+    {
+        $status = CurrentVacency::where('schoolCode', $this->schoolCodeId)
+            ->decrement('remaingVacency');
+        return $status;
     }
 }
