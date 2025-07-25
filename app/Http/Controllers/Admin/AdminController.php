@@ -14,6 +14,7 @@ use App\Models\Operator\CurrentVacency;
 use App\Models\Operator\SchoolVacency;
 use App\Models\Operator\VacencyDetails;
 use App\Support\Reuseable;
+use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -30,6 +31,7 @@ class AdminController extends Controller
     protected $saveSchoolDetails = null;
     protected $schoolCodeId = null;
     protected $vacencyDetailsId = [];
+    protected $revertCandId = null;
 
     // *** Dashboard View ***
     public function index(Request $request)
@@ -595,7 +597,70 @@ class AdminController extends Controller
         ];
 
         try {
+            $candiadteId = $request->candidateId ?? null;
+            $this->revertCandId = $candiadteId;
+            if ($this->revertCandId) {
+                // *** Get candidate revert row ***
+                $candRow = $this->candRevertRowById();
+                if (!$candRow) {
+                    $resData['message'] = "Candidate details not found.";
+                    return response()->json([
+                        'resData' => $resData
+                    ]);
+                }
+                $this->vacencyDetailsId = $candRow->allocatedSchoolCode ?? null;
 
+                // *** Get vacency revert row ***
+                $vacRow = $this->vacRevertRowById();
+                if (!$vacRow) {
+                    $resData['message'] = "Vacency details not found.";
+                    return response()->json([
+                        'resData' => $resData
+                    ]);
+                }
+                $this->schoolCodeId = $vacRow->schoolCode ?? null;
+                try {
+
+                    // *** Revert candidate allocation ***
+                    DB::beginTransaction();
+
+                    // *** Revert current vacency ***
+                    $status = $this->revertRemaingVacency($vacRow->school_vacency->actualVacency ?? 0);
+                    if (!$status) {
+                        throw new Error('Error ');
+                    }
+
+                    // *** Revert vacency details ***
+                    $status = $this->revertVacRow();
+                    if (!$status) {
+                        throw new Error('Error ');
+                    }
+
+                    // *** Revert candidate details ***
+                    $status = $this->revertCandDetails();
+                    if (!$status) {
+                        throw new Error('Error ');
+                    }
+
+                    // DB::commit();
+                    $resData['message'] = "Candidate revert successful.";
+                    $resData['statusCode'] = 200;
+                    return response()->json([
+                        'resData' => $resData
+                    ]);
+                } catch (Exception $err) {
+                    DB::rollBack();
+                    $resData['message'] = "Error execute while revert candidate allocation.";
+                    return response()->json([
+                        'resData' => $resData
+                    ]);
+                }
+            } else {
+                $resData['message'] = "Candidate not required .";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
         } catch (Exception $err) {
             $resData['message'] = "Server error please try later !";
             return response()->json([

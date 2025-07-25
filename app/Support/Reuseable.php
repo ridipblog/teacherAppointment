@@ -209,4 +209,71 @@ trait Reuseable
             ->decrement('remaingVacency');
         return $status;
     }
+
+    // *** Candidate revert row by id ***
+    public function candRevertRowById()
+    {
+        $data = CandidateData::select(
+            'id',
+            'allocatedSchoolCode'
+        )
+            ->where('id', $this->revertCandId)
+            ->first();
+        return $data;
+    }
+
+    // *** Vacycny revert row by id ***
+    public function vacRevertRowById()
+    {
+        $data = VacencyDetails::query()
+            ->with([
+                'school_vacency' => function ($query) {
+                    $query->select(
+                        'id',
+                        'actualVacency'
+                    );
+                }
+            ])->select(
+                'id',
+                'schoolCode'
+            )
+            ->whereHas('school_vacency')
+            ->where('id', $this->vacencyDetailsId)
+            ->where('isAssined', 1)
+            ->first();
+        return $data;
+    }
+
+    // *** Revert Remaing vacency ***
+    public function revertRemaingVacency($actualVac)
+    {
+        CurrentVacency::where([
+            ['schoolCode', $this->schoolCodeId],
+            ['remaingVacency', '<=', $actualVac],
+            ['remaingVacency', '<>', -1]
+        ])->increment('remaingVacency');
+    }
+
+    // *** Revert vacency details ***
+    public function revertVacRow()
+    {
+        VacencyDetails::where([
+            ['id', $this->vacencyDetailsId],
+            ['isAssined', 1]
+        ]);
+    }
+
+    // *** Revert Candidate details ***
+    public function revertCandDetails()
+    {
+        CandidateData::where([
+            ['id', $this->revertCandId],
+            ['allocatedSchoolCode', $this->vacencyDetailsId]
+        ])->update([
+            'allocatedSchoolCode' => null,
+            'generatedBy' => null,
+            'generatedOn' => null,
+            'isAllocated' => null
+        ]);
+    }
 }

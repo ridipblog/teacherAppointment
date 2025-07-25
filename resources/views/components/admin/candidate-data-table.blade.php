@@ -29,8 +29,8 @@
 
                     @if (($item['isAllocated'] ?? 2) == 1)
                         <!-- Revert -->
-                        <button type="button" id="revert-candidate" value="{{ Crypt::encryptString($item['id'] ?? null) }}" title="Revert"
-                            class="text-yellow-600 hover:text-yellow-800">
+                        <button type="button" value="{{ Crypt::encryptString($item['id'] ?? null) }}" title="Revert"
+                            class="text-yellow-600 hover:text-yellow-800 revert-candidate-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

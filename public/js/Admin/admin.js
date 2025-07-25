@@ -83,4 +83,13 @@ $(document).ready(function () {
             Swal.fire("Can not delete school details, Initialized error execute!");
         }
     });
+
+    // *** Revert candidate ***
+    $(document).on('click', '.revert-candidate-btn', async function () {
+        try {
+            adminSupportObj.deleteSchoolDetails($(this));
+        } catch (error) {
+            Swal.fire("Can not revert candidate, Initialized error execute!");
+        }
+    });
 });
