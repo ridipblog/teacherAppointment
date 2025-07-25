@@ -11,7 +11,8 @@ class AuthSupport extends RequestSupport {
             var form_data = new FormData($(form)[0]);
             this.formPostReponse = async (response) => {
                 if (response?.resData?.statusCode == 200) {
-                    window.location.href = `/operator/`
+                    let accessRoute = response?.resData?.acessRoute ?? '/';
+                    window.location.href = `${accessRoute}`;
                 } else if (response?.resData?.statusCode == 400) {
                     Swal.fire(response?.resData?.message);
                 } else {
@@ -22,6 +23,7 @@ class AuthSupport extends RequestSupport {
             reuseableObj.processingStatus('#login-btn', 'end', 'Login');
 
         } catch (error) {
+            reuseableObj.processingStatus('#login-btn', 'end', 'Login');
             Swal.fire("Server error please try later !");
         }
     }

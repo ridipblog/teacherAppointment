@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use BugLock\rolePermissionModule\Models\UserRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -40,4 +42,9 @@ class User extends Authenticatable
     protected $casts = [
 
     ];
+
+    public function user_roles()
+    {
+        return $this->hasOne(UserRoles::class, 'user_id', 'id');
+    }
 }

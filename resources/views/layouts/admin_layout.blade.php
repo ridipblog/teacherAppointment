@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Dashboard')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @yield('extraCss')
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -27,19 +28,19 @@
 
                 <ul class="space-y-1">
                     <li>
-                        <a href="#"
+                        <a href="{{ Route('admin.index') }}"
                             class="block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
                             Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ Route('admin.schoolDetailsView') }}"
                             class="block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
                             School Vacancy
                         </a>
                     </li>
                     <li>
-                        <a href="#"
+                        <a href="{{ Route('admin.candidateList') }}"
                             class="block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
                             User Management
                         </a>

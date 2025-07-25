@@ -10,38 +10,42 @@ class AdminSupport extends RequestSupport {
     addSchoolVacency = async (form, actionBtn, requestType) => {
         try {
             reuseableObj.processingStatus(actionBtn);
-            var form_data = new FormData($(form)[0]);
-            form_data.append('requestType', requestType);
-            this.formPostReponse = async (response) => {
-                if (response?.resData?.statusCode == 200) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response?.resData?.message,
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.reload();
-                        }
-                    });
+            let confirm = await reuseableObj.confirmSwal("Are you sure you want to delete?");
+            if (confirm.isConfirmed) {
 
-                } else if (response?.resData?.statusCode == 400) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Success',
-                        text: response?.resData?.message,
-                        confirmButtonText: 'OK'
-                    })
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Success',
-                        text: "Something went wrong",
-                        confirmButtonText: 'OK'
-                    });
+                var form_data = new FormData($(form)[0]);
+                form_data.append('requestType', requestType);
+                this.formPostReponse = async (response) => {
+                    if (response?.resData?.statusCode == 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
+
+                    } else if (response?.resData?.statusCode == 400) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: "Something went wrong",
+                            confirmButtonText: 'OK'
+                        });
+                    }
                 }
+                await this.formPost(form_data, '/admin/add-school-vacency-post');
             }
-            await this.formPost(form_data, '/admin/add-school-vacency-post');
             reuseableObj.processingStatus(actionBtn, 'end', 'Submit Vacancy Information');
 
         } catch (error) {
@@ -131,7 +135,7 @@ class AdminSupport extends RequestSupport {
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.reload();
+                                window.location.href = `/admin`;
                             }
                         });
 

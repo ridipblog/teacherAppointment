@@ -46,7 +46,18 @@ class AuthrizzationController extends Controller
                     // *** Login Default Guard ****
                     if (Auth::attempt($loginData)) {
                         $resData['authPerson'] = Auth::user();
-                        $resData['statusCode'] = 200;
+                        $role = $resData['authPerson']->user_roles->role_id;
+
+                        // *** All Acess Routes ***
+                        $accessRoutes = config('appConfig.accessRoutes');
+
+                        // *** Set Access Route ***
+                        if ($role) {
+                            $resData['acessRoute'] = $accessRoutes[$role] ?? '/';
+                            $resData['statusCode'] = 200;
+                        } else {
+                            $resData['message'] = "Role not secified. ";
+                        }
                     } else {
                         $resData['message'] = "Credentials not found !";
                     }
@@ -59,8 +70,9 @@ class AuthrizzationController extends Controller
             ]);
         }
     }
-  // ** Logout ***
-    public function logout(Request $request){
+    // ** Logout ***
+    public function logout(Request $request)
+    {
         Auth::logout();
         return redirect('/');
     }

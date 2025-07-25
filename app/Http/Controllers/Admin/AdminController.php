@@ -3,6 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DbViews\AssignCandCountWithUser;
+use App\Models\DbViews\AssignedCandDetailsWithUser;
+use App\Models\DbViews\ReportRemainingVacancyPg;
+use App\Models\DbViews\ReportRemainingVacancyUg;
+use App\Models\DbViews\ReportSelectedCandidatePg;
+use App\Models\DbViews\ReportSelectedCandidateUg;
+use App\Models\Operator\CandidateData;
 use App\Models\Operator\CurrentVacency;
 use App\Models\Operator\SchoolVacency;
 use App\Models\Operator\VacencyDetails;
@@ -11,6 +18,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class AdminController extends Controller
 {
@@ -23,7 +31,162 @@ class AdminController extends Controller
     protected $schoolCodeId = null;
     protected $vacencyDetailsId = [];
 
-    public function index(Request $request) {}
+    // *** Dashboard View ***
+    public function index(Request $request)
+    {
+        $viewData = [
+            'isError' => false,
+            'message' => null,
+            'counts' => [],
+            'reportCards' => null
+        ];
+
+        try {
+
+            $reportCardConfig = config('appConfig.reports');
+
+            // *** Assign Candidate Count With User ***
+            $viewData['counts']['assignCandCountWithUser'] = AssignCandCountWithUser::count();
+
+            // *** Assigned Candidate Details with user ***
+            $viewData['counts']['AssignedCandDetailsWithUser'] = AssignedCandDetailsWithUser::count();
+
+            // *** Report remaining vacency pg ***
+            $viewData['counts']['ReportRemainingVacancyPg'] = ReportRemainingVacancyPg::count();
+
+            // *** Report remaining vacency ug ***
+            $viewData['counts']['ReportRemainingVacancyUg'] = ReportRemainingVacancyUg::count();
+
+            // *** Report selected candidate pg ***
+            $viewData['counts']['ReportSelectedCandidatePg'] = ReportSelectedCandidatePg::count();
+
+            // *** Report selected candidate ug ***
+            $viewData['counts']['ReportSelectedCandidateUg'] = ReportSelectedCandidateUg::count();
+
+            // *** Report cards config ***
+            $viewData['reportCards'] = $reportCardConfig;
+
+            // $columns = Schema::getColumnListing((new ReportSelectedCandidateUg)->getTable());
+
+            $viewData['isError'] = false;
+        } catch (Exception $err) {
+            $viewData['isError'] = true;
+            $viewData['message'] = "Server error please try later !";
+        }
+
+        return view('admin.dashboard', compact('viewData'));
+    }
+
+    // *** Report Page View ***
+    public function reportPage(Request $request, $page = 'assignedCount')
+    {
+
+        $viewData = [
+            'isError' => false,
+            'message' => null,
+            'dataHeader' => [],
+            'data' => null
+
+        ];
+
+        try {
+
+            $reportConfig = config('appConfig.reports');
+
+            $reportsModels = [
+                'assignCandCountWithUser' => assignCandCountWithUser::class,
+                'AssignedCandDetailsWithUser' => AssignedCandDetailsWithUser::class,
+                'ReportRemainingVacancyPg' => ReportRemainingVacancyPg::class,
+                'ReportRemainingVacancyUg' => ReportRemainingVacancyUg::class,
+                'ReportSelectedCandidatePg' => ReportSelectedCandidatePg::class,
+                'ReportSelectedCandidateUg' => ReportSelectedCandidateUg::class,
+            ];
+
+            // *** Get all column name form views ***
+            $classObj = $reportsModels[$page];
+            if ($classObj && class_exists($classObj)) {
+
+                $mainObj = new $classObj();
+
+                // *** Extract columns name ***
+                $columns = Schema::getColumnListing(($mainObj)->getTable());
+
+                $removedColumns = $reportConfig[$page]['removedColumns'];
+
+                $filteredColumns = $columns;
+                if (count($removedColumns) != 0) {
+                    // *** Extract only required columns ***
+                    $filteredColumns = array_values(
+                        array_filter(
+                            $columns,
+                            fn($col)
+                            => !in_array($col, $removedColumns)
+                        )
+                    );
+                }
+
+                $viewData['dataHeader'] = $filteredColumns;
+
+                // *** Get all data ***
+                if (count($removedColumns) != 0) {
+                    $mainObj->select($filteredColumns);
+                }
+                $data = $mainObj->get();
+
+                $viewData['data'] = $data;
+                $viewData['isError'] = false;
+            } else {
+                $viewData['isError'] = true;
+                $viewData['message'] = "Repot card not found ";
+            }
+        } catch (Exception $err) {
+            $viewData['isError'] = true;
+            $viewData['message'] = "Server error lease try later !";
+        }
+        return view('admin.report_page', compact('viewData'));
+    }
+
+    // *** School Details View ***
+    public function schoolDetailsView(Request $request)
+    {
+        $viewData = [
+            'isError' => false,
+            'message' => null,
+            'dataHeader' => null,
+            'data' => null
+        ];
+
+        try {
+
+            // *** Set Headers ***
+            $dataHeader = [
+                'schoolCode',
+                'schoolName',
+                'district',
+                'medium',
+                'vacencyCategory',
+            ];
+
+            $tableHeader = $dataHeader;
+            $tableHeader[] = 'id';
+
+            // *** Get all school details ***
+            $data = SchoolVacency::select($tableHeader)
+                ->get();
+
+            $dataHeader[] = 'actionTab';
+
+            $viewData['dataHeader'] = $dataHeader;
+
+            $viewData['data'] = $data;
+            $viewData['isError'] = false;
+        } catch (Exception $err) {
+            $viewData['isError'] = true;
+            $viewData['message'] = "Server error please try later !";
+        }
+
+        return view('admin.school_details_page', compact('viewData'));
+    }
 
     // *** Add School Vacency Form ***
     public function addSchoolVacency(Request $request, $form = 'add', $schoolCode = null)
@@ -373,6 +536,68 @@ class AdminController extends Controller
             }
         } catch (Exception $err) {
             $resData['message'] = 'Server error please try later .';
+            return response()->json([
+                'resData' => $resData
+            ]);
+        }
+    }
+
+    // *** Candidate List View ***
+    public function candidateList(Request $request)
+    {
+        $viewData = [
+            'isError' => false,
+            'message' => null,
+            'data' => null
+        ];
+
+        try {
+
+            // ** Candidate all data ***
+            $data = CandidateData::query()
+                ->with(['allpost'])
+                ->select(
+                    'id',
+                    'rollNumber',
+                    'post',
+                    'name',
+                    'isAllocated'
+                )
+                ->whereHas('allPost')
+                ->get();
+
+            $viewData['data'] = $data;
+        } catch (Exception $err) {
+            $viewData['isError'] = true;
+            $viewData['message'] = "Server error please try later !";
+        }
+
+        return view('admin.candidate_list_page', compact('viewData'));
+    }
+
+    // *** Candidate full details ***
+    public function candidateFullDetails(Request $request)
+    {
+        $viewData = [
+            'isError' => false,
+            'message' => null
+        ];
+
+        return view('admin.candidate_details_page');
+    }
+
+    // *** Candidate Revert ***
+    public function candidateRevert(Request $request)
+    {
+        $resData = [
+            'statusCode' => 400,
+            'message' => null
+        ];
+
+        try {
+
+        } catch (Exception $err) {
+            $resData['message'] = "Server error please try later !";
             return response()->json([
                 'resData' => $resData
             ]);

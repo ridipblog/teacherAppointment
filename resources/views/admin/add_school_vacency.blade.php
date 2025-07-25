@@ -137,8 +137,9 @@
                                         @if ($form == 'add')
                                             <button type="button" class="text-red-600 hover:underline font-medium"
                                                 id="remove-form">Remove</button>
-                                        @elseif ($form=='delete')
-                                            <button type="button" value="{{ $rows->id ?? null }}" id="delete-vacency-details"
+                                        @elseif ($form == 'delete')
+                                            <button type="button" value="{{ $rows->id ?? null }}"
+                                                id="delete-vacency-details"
                                                 class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg shadow transition duration-200">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                     viewBox="0 0 24 24" stroke="currentColor">
@@ -193,12 +194,15 @@
 
 
             <!-- Submit Button -->
-            <div class="text-center">
-                <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                    id="{{ $form }}-school-vacency-btn">
-                    {{ ucfirst($form) }} School Information
-                </button>
-            </div>
+            @if ($form != 'view')
+                <div class="text-center">
+                    <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        id="{{ $form }}-school-vacency-btn">
+                        {{ ucfirst($form) }} School Information
+                    </button>
+                </div>
+            @endif
+
         </form>
     @endif
 @endsection
