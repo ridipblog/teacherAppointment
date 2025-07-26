@@ -17,7 +17,8 @@
                 <td class="">{{ ($item['isAllocated'] ?? 2) == 1 ? 'Allocated' : 'Not Allocated' }}</td>
                 <td class="flex space-x-3 justify-center items-center">
                     <!-- View -->
-                    <a href="" title="View" class="text-blue-600 hover:text-blue-800">
+                    <a href="{{ Route('admin.candidateFullDetails', ['id' => Crypt::encryptString($item['id'] ?? null)]) }}"
+                        title="View" class="text-blue-600 hover:text-blue-800">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

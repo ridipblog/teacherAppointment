@@ -87,7 +87,7 @@ $(document).ready(function () {
     // *** Revert candidate ***
     $(document).on('click', '.revert-candidate-btn', async function () {
         try {
-            adminSupportObj.deleteSchoolDetails($(this));
+            adminSupportObj.revertAllocatedCand($(this));
         } catch (error) {
             Swal.fire("Can not revert candidate, Initialized error execute!");
         }

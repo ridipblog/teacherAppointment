@@ -247,7 +247,7 @@ trait Reuseable
     // *** Revert Remaing vacency ***
     public function revertRemaingVacency($actualVac)
     {
-        CurrentVacency::where([
+        return CurrentVacency::where([
             ['schoolCode', $this->schoolCodeId],
             ['remaingVacency', '<=', $actualVac],
             ['remaingVacency', '<>', -1]
@@ -257,16 +257,17 @@ trait Reuseable
     // *** Revert vacency details ***
     public function revertVacRow()
     {
-        VacencyDetails::where([
-            ['id', $this->vacencyDetailsId],
-            ['isAssined', 1]
+        return VacencyDetails::where([
+            ['id', $this->vacencyDetailsId]
+        ])->update([
+            'isAssined' => 0
         ]);
     }
 
     // *** Revert Candidate details ***
     public function revertCandDetails()
     {
-        CandidateData::where([
+        return CandidateData::where([
             ['id', $this->revertCandId],
             ['allocatedSchoolCode', $this->vacencyDetailsId]
         ])->update([
@@ -275,5 +276,19 @@ trait Reuseable
             'generatedOn' => null,
             'isAllocated' => null
         ]);
+    }
+
+    // *** Candidate Details by ID ***
+    public function candiadteDetailsById()
+    {
+        return CandidateData::query()
+            ->with([
+                'allpost',
+                'vacency_details',
+                'vacency_details.school_vacency',
+                'vacency_details.school_vacency.allpost'
+            ])
+            ->where('id', $this->revertCandId)
+            ->first();
     }
 }

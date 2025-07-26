@@ -44,5 +44,6 @@
 
     {{-- *** All Admin Js Code Here *** --}}
     <script type="module" src="{{ asset('js/Admin/reportTable.js') }}"></script>
+    <script type="module" src="{{ asset('js/Admin/admin.js') }}"></script>
 
 @endsection

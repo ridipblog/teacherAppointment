@@ -11,3 +11,6 @@ Route::post('/delete-vacency-row', [AdminController::class, 'deleteVacencyDetail
 
 // *** delete school details ***
 Route::post('/delete-school-details', [AdminController::class, 'deleteSchoolDetails']);
+
+// *** Revert Allocated Candidate  ****
+Route::post('/revert-allocated-candidate', [AdminController::class, 'candidateRevert']);

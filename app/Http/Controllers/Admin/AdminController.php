@@ -578,14 +578,31 @@ class AdminController extends Controller
     }
 
     // *** Candidate full details ***
-    public function candidateFullDetails(Request $request)
+    public function candidateFullDetails(Request $request, $id = null)
     {
         $viewData = [
             'isError' => false,
-            'message' => null
+            'message' => null,
+            'data' => null
         ];
 
-        return view('admin.candidate_details_page');
+        try {
+            $this->revertCandId = Crypt::decryptString($id);
+
+            // *** Get Candiadte Details ***
+            $data = $this->candiadteDetailsById();
+            if ($data) {
+                $viewData['data'] = $data;
+            } else {
+                $viewData['isError'] = true;
+                $viewData['message'] = "Candidate details not found ";
+            }
+        } catch (Exception $err) {
+            $viewData['isError'] = true;
+            $viewData['message'] = "Server error please try later ";
+        }
+
+        return view('admin.candidate_details_page', compact('viewData'));
     }
 
     // *** Candidate Revert ***
@@ -597,8 +614,8 @@ class AdminController extends Controller
         ];
 
         try {
-            $candiadteId = $request->candidateId ?? null;
-            $this->revertCandId = $candiadteId;
+            $this->revertCandId = $request->candidateId ?? null;
+            $this->revertCandId = Crypt::decryptString($this->revertCandId);
             if ($this->revertCandId) {
                 // *** Get candidate revert row ***
                 $candRow = $this->candRevertRowById();
@@ -642,7 +659,7 @@ class AdminController extends Controller
                         throw new Error('Error ');
                     }
 
-                    // DB::commit();
+                    DB::commit();
                     $resData['message'] = "Candidate revert successful.";
                     $resData['statusCode'] = 200;
                     return response()->json([

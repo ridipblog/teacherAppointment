@@ -165,6 +165,57 @@ class AdminSupport extends RequestSupport {
             Swal.fire("Server error please try later !");
         }
     }
+
+    // *** Revert allocated candidate ***
+    revertAllocatedCand = async (actionBtn) => {
+        try {
+            let btnHtml=actionBtn.html();
+            reuseableObj.processingStatus(actionBtn);
+            let confirm = await reuseableObj.confirmSwal("Are you sure you want to revert?");
+            if (confirm.isConfirmed) {
+                let candidateId = actionBtn.val();
+                var form_data = new FormData();
+                form_data.append('candidateId', candidateId);
+
+                this.formPostReponse = async (response) => {
+                    if (response?.resData?.statusCode == 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = `/admin/candidate`;
+                            }
+                        });
+
+                    } else if (response?.resData?.statusCode == 400) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: "Something went wrong",
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+                await this.formPost(form_data, '/admin/revert-allocated-candidate');
+            }
+            reuseableObj.processingStatus(actionBtn, 'end', btnHtml);
+
+        } catch (error) {
+            console.log(error);
+            reuseableObj.processingStatus(actionBtn, 'end', btnHtml);
+            Swal.fire("Server error please try later !");
+        }
+    }
 }
 
 export default AdminSupport;

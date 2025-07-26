@@ -29,19 +29,19 @@
                 <ul class="space-y-1">
                     <li>
                         <a href="{{ Route('admin.index') }}"
-                            class="block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
+                            class="{{ Route::currentRouteName() == 'admin.index' ? 'border-blue-500 text-blue-600 font-semibold' : '' }} block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
                             Dashboard
                         </a>
                     </li>
                     <li>
                         <a href="{{ Route('admin.schoolDetailsView') }}"
-                            class="block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
+                            class="{{ Route::currentRouteName() == 'admin.schoolDetailsView' ? 'border-blue-500 text-blue-600 font-semibold' : '' }} block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
                             School Vacancy
                         </a>
                     </li>
                     <li>
                         <a href="{{ Route('admin.candidateList') }}"
-                            class="block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
+                            class="{{ Route::currentRouteName() == 'admin.candidateList' ? 'border-blue-500 text-blue-600 font-semibold' : '' }} block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
                             Candidate Revert
                         </a>
                     </li>
