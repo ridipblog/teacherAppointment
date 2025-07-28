@@ -20,3 +20,6 @@ Route::get('/candidate', [AdminController::class, 'candidateList'])->name('admin
 
 // *** Candidate Full Details ***
 Route::get('/candidate-details/{id?}', [AdminController::class, 'candidateFullDetails'])->name('admin.candidateFullDetails');
+
+// *** Add User ***
+Route::get('/add-user', [AdminController::class, 'addUser'])->name('admin.addUser');

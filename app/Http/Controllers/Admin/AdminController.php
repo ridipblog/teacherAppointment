@@ -13,6 +13,7 @@ use App\Models\Operator\CandidateData;
 use App\Models\Operator\CurrentVacency;
 use App\Models\Operator\SchoolVacency;
 use App\Models\Operator\VacencyDetails;
+use App\Models\User;
 use App\Support\Reuseable;
 use Error;
 use Exception;
@@ -684,5 +685,36 @@ class AdminController extends Controller
                 'resData' => $resData
             ]);
         }
+    }
+
+    // *** Add New User (View) ***
+    public function addUser(Request $request)
+    {
+        $viewData = [
+            'isError' => false,
+            'message' => null,
+            'users' => null,
+            'dataHeader'=>[]
+        ];
+
+        try {
+
+            $viewData['dataHeader']=[
+                'name',
+                'email',
+                'phone',
+                'role'
+            ];
+
+            // *** Get All Users ****
+            $viewData['users'] = $this->allUsers();
+
+            $viewData['isError'] = false;
+        } catch (Exception $err) {
+            $viewData['isError'] = true;
+            $viewData['message'] = "Server error please dtry later !";
+        }
+
+        return view('admin.add_user_page', compact('viewData'));
     }
 }

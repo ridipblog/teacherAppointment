@@ -6,6 +6,7 @@ use App\Models\Operator\CandidateData;
 use App\Models\Operator\CurrentVacency;
 use App\Models\Operator\SchoolVacency;
 use App\Models\Operator\VacencyDetails;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 trait Reuseable
@@ -290,5 +291,16 @@ trait Reuseable
             ])
             ->where('id', $this->revertCandId)
             ->first();
+    }
+
+    // *** Get All Users ***
+    public function allUsers()
+    {
+        return User::query()
+            ->with([
+                'user_roles',
+                'user_roles.roles'
+            ])
+            ->get();
     }
 }
