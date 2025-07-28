@@ -40,7 +40,8 @@ class AuthrizzationController extends Controller
                 } else {
                     $loginData = [
                         'phone' => $request->phone ?? null,
-                        'password' => $request->password ?? null
+                        'password' => $request->password ?? null,
+                        'active' => 1
                     ];
 
                     // *** Login Default Guard ****

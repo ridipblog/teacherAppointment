@@ -92,4 +92,23 @@ $(document).ready(function () {
             Swal.fire("Can not revert candidate, Initialized error execute!");
         }
     });
+
+    // *** Add new user ***
+    $(document).on('submit', '#add-user-form', async function (e) {
+        try {
+            e.preventDefault();
+            adminSupportObj.addNewUser('#add-user-form', $('#add-user-btn'));
+        } catch (error) {
+            Swal.fire("Can not add user, Initialized error execute!");
+        }
+    });
+
+    // *** Deactive user ***
+    $(document).on('click', '#user-deactive', async function (e) {
+        try {
+            adminSupportObj.deactiveUser($(this));
+        } catch (error) {
+            Swal.fire("Can not add user, Initialized error execute!");
+        }
+    });
 });

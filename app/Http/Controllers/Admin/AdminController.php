@@ -15,11 +15,13 @@ use App\Models\Operator\SchoolVacency;
 use App\Models\Operator\VacencyDetails;
 use App\Models\User;
 use App\Support\Reuseable;
+use BugLock\rolePermissionModule\Models\UserRoles;
 use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
 class AdminController extends Controller
@@ -33,6 +35,8 @@ class AdminController extends Controller
     protected $schoolCodeId = null;
     protected $vacencyDetailsId = [];
     protected $revertCandId = null;
+    protected $userPhone = null;
+    protected $userId = null;
 
     // *** Dashboard View ***
     public function index(Request $request)
@@ -693,18 +697,10 @@ class AdminController extends Controller
         $viewData = [
             'isError' => false,
             'message' => null,
-            'users' => null,
-            'dataHeader'=>[]
+            'users' => null
         ];
 
         try {
-
-            $viewData['dataHeader']=[
-                'name',
-                'email',
-                'phone',
-                'role'
-            ];
 
             // *** Get All Users ****
             $viewData['users'] = $this->allUsers();
@@ -716,5 +712,151 @@ class AdminController extends Controller
         }
 
         return view('admin.add_user_page', compact('viewData'));
+    }
+
+    // *** Add user post ***
+    public function addUserPost(Request $request)
+    {
+        $resData = [
+            'statusCode' => 400,
+            'message' => null
+        ];
+
+        try {
+            $incomming_data = [
+                // *** First Form ***
+                "name" => 'required',
+                "email" => 'required|email',
+                "role" => 'required|',
+                "password" => 'required',
+                "password_confirmation" => 'required'
+            ];
+
+            // *** Validate All Fields ***
+            $validate = $this->validateFields($request, $incomming_data, $request->all());
+            if ($validate->fails()) {
+                $resData['message'] = "All fields are required !";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            // *** Check same password or not ***
+            if ($request->password !== $request->password_confirmation) {
+                $resData['message'] = "Password and confirmation password must be same .";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            $this->userPhone = $request->phone;
+
+            // *** Check user by phone ***
+            if ($this->checkUByPhone()) {
+                $resData['message'] = "Same phone number already exists .";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            // *** Insert user ***
+            try {
+                DB::beginTransaction();
+
+                // *** Insert data in user ***
+                $saveUser = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'password' => Hash::make($request->password),
+                    'plainPasswrd' => $request->password
+                ]);
+
+                // *** Add role ***
+                UserRoles::create([
+                    'user_id' => $saveUser->id,
+                    'role_id' => $request->role
+                ]);
+
+                DB::commit();
+
+                $resData['message'] = "User add sucessfully. ";
+                $resData['statusCode'] = 200;
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            } catch (Exception $err) {
+                DB::rollBack();
+                $resData['message'] = "Server error while insert new user.";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+        } catch (Exception $err) {
+            $resData['message'] = "Server error please try later !";
+            return response()->json([
+                'resData' => $resData
+            ]);
+        }
+    }
+
+    // *** Deactive user ***
+    public function deactiveUser(Request $request)
+    {
+        $resData = [
+            'statusCode' => 400,
+            'message' => null
+        ];
+
+        try {
+
+            // *** Check user ID ***
+            if (!$request->userId ?? null) {
+                $resData['message'] = "User is required.";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            $userSttaus = config('appConfig.userStatus');
+            $userStatus = array_keys($userSttaus);
+
+            // ** check only valid update type ***
+            if (!in_array($request->updateStatus ?? null, $userStatus)) {
+                $resData['message'] = "Update type are not valid.";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            $this->userId = Crypt::decryptString($request->userId ?? null);
+
+            // *** Check user eixsts ***
+            if (!$this->checkUserId()) {
+                $resData['message'] = "User not found !";
+                return response()->json([
+                    'resData' => $resData
+                ]);
+            }
+
+            // *** Update Active Status ***
+            User::where([
+                ['id', $this->userId],
+            ])
+                ->update([
+                    'active' => $request->updateStatus
+                ]);
+
+            $resData['message'] = "User status upadted.";
+            $resData['statusCode'] = 200;
+            return response()->json([
+                'resData' => $resData
+            ]);
+        } catch (Exception $err) {
+            $resData['message'] = "Server error please try later !";
+            return response()->json([
+                'resData' => $resData
+            ]);
+        }
     }
 }

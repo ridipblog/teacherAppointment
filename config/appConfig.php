@@ -54,4 +54,8 @@ return [
             'removedColumns' => []
         ],
     ],
+    'userStatus'=>[
+        '1'=>'active',
+        '2'=>'deactive'
+    ]
 ];

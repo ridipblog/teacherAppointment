@@ -49,7 +49,6 @@ class AdminSupport extends RequestSupport {
             reuseableObj.processingStatus(actionBtn, 'end', 'Submit Vacancy Information');
 
         } catch (error) {
-            console.log(error);
             reuseableObj.processingStatus(actionBtn, 'end', 'Submit Vacancy Information');
             Swal.fire("Server error please try later !");
         }
@@ -169,7 +168,7 @@ class AdminSupport extends RequestSupport {
     // *** Revert allocated candidate ***
     revertAllocatedCand = async (actionBtn) => {
         try {
-            let btnHtml=actionBtn.html();
+            let btnHtml = actionBtn.html();
             reuseableObj.processingStatus(actionBtn);
             let confirm = await reuseableObj.confirmSwal("Are you sure you want to revert?");
             if (confirm.isConfirmed) {
@@ -214,6 +213,109 @@ class AdminSupport extends RequestSupport {
             console.log(error);
             reuseableObj.processingStatus(actionBtn, 'end', btnHtml);
             Swal.fire("Server error please try later !");
+        }
+    }
+
+    // *** Add new User ***
+    addNewUser = async (form, actionBtn) => {
+        let btnHtml = 'Refresh Page';
+        try {
+            btnHtml = actionBtn.html();
+            reuseableObj.processingStatus(actionBtn);
+            let confirm = await reuseableObj.confirmSwal("Are you sure you want to add user?");
+            if (confirm.isConfirmed) {
+                var form_data = new FormData($(form)[0]);
+
+                this.formPostReponse = async (response) => {
+                    if (response?.resData?.statusCode == 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = `/admin/add-user`;
+                            }
+                        });
+
+                    } else if (response?.resData?.statusCode == 400) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: "Something went wrong",
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+                await this.formPost(form_data, '/admin/add-user-post');
+            }
+            reuseableObj.processingStatus(actionBtn, 'end', btnHtml);
+
+        } catch (error) {
+            reuseableObj.processingStatus(actionBtn, 'end', btnHtml);
+            Swal.fire("Server error please try later1 !");
+        }
+    }
+
+    // *** Deactive user ***
+    deactiveUser = async (actionBtn) => {
+        let btnHtml = 'Refresh Page';
+        try {
+            btnHtml = actionBtn.html();
+            let updateStatus = actionBtn.data('user-status') ?? 0;
+            reuseableObj.processingStatus(actionBtn);
+            let confirm = await reuseableObj.confirmSwal(`Are you sure you want to ${updateStatus == 1 ? 'active' : 'deactive'} user?`);
+            if (confirm.isConfirmed) {
+                var form_data = new FormData();
+                let userId = actionBtn.val();
+                let updateStatus = actionBtn.data('user-status') ?? 0;
+                form_data.append("userId", userId);
+                form_data.append("updateStatus", updateStatus);
+
+                this.formPostReponse = async (response) => {
+                    if (response?.resData?.statusCode == 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = `/admin/add-user`;
+                            }
+                        });
+
+                    } else if (response?.resData?.statusCode == 400) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: response?.resData?.message,
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Success',
+                            text: "Something went wrong",
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+                await this.formPost(form_data, '/admin/deactive-user');
+            }
+            reuseableObj.processingStatus(actionBtn, 'end', btnHtml);
+
+        } catch (error) {
+            reuseableObj.processingStatus(actionBtn, 'end', btnHtml);
+            Swal.fire("Server error please try later1 !");
         }
     }
 }

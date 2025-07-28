@@ -1,10 +1,8 @@
 @php
     $data = null;
     $isError = null;
-    $dataHeader = [];
     try {
-        $data = $viewData['data'] ?? null;
-        $dataHeader = $viewData['dataHeader'] ?? null;
+        $data = $viewData['users'] ?? null;
         $isError = $viewData['isError'] ?? true;
     } catch (Exception $err) {
         $isError = true;
@@ -14,6 +12,14 @@
 @extends('layouts.admin_layout')
 
 @section('title', 'Candidate Details ')
+
+{{-- *** Here Extra Css *** --}}
+@section('extraCss')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+@endsection
 
 {{-- *** Main Content *** --}}
 @section('content')
@@ -26,11 +32,17 @@
         <div class="max-w-xl mx-auto bg-white shadow-md rounded-xl p-6">
             <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New User</h2>
 
-            <form>
+            <form id="add-user-form">
                 <!-- Full Name -->
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
                     <input type="text" id="name" name="name" required
+                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                    <input type="phone" id="phone" name="phone" required
                         class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
@@ -69,7 +81,7 @@
 
                 <!-- Submit Button -->
                 <div class="flex justify-end">
-                    <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">
+                    <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition" id="add-user-btn">
                         Create User
                     </button>
                 </div>
@@ -81,7 +93,7 @@
             <div class="overflow-x-auto">
 
                 {{-- *** Report Table *** --}}
-                <x-admin.all-user-table-component>
+                <x-admin.all-user-table-component :dataBase="$data">
 
                 </x-admin.all-user-table-component>
             </div>
@@ -92,7 +104,20 @@
 
 @section('extraJs')
 
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- Buttons Extension -->
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+    <!-- File generation support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
     {{-- *** All Admin Js Code Here *** --}}
     <script type="module" src="{{ asset('js/Admin/admin.js') }}"></script>
+    <script type="module" src="{{ asset('js/Admin/reportTable.js') }}"></script>
 
 @endsection

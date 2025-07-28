@@ -14,3 +14,9 @@ Route::post('/delete-school-details', [AdminController::class, 'deleteSchoolDeta
 
 // *** Revert Allocated Candidate  ****
 Route::post('/revert-allocated-candidate', [AdminController::class, 'candidateRevert']);
+
+// *** Add user post ***
+Route::post('/add-user-post', [AdminController::class, 'addUserPost'])->name('admin.addUserPost');
+
+// *** Deactive user ***
+Route::post('/deactive-user', [AdminController::class, 'deactiveUser'])->name('admin.deactiveUser');

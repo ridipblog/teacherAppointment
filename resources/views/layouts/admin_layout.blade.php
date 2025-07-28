@@ -45,6 +45,12 @@
                             Candidate Revert
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ Route('admin.addUser') }}"
+                            class="{{ Route::currentRouteName() == 'admin.addUser' ? 'border-blue-500 text-blue-600 font-semibold' : '' }} block px-4 py-2 border border-gray-200 rounded hover:bg-blue-100 hover:border-blue-400 transition">
+                            Add New User
+                        </a>
+                    </li>
                 </ul>
             </div>
         </aside>

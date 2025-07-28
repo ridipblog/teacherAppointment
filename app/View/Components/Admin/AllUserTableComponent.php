@@ -11,12 +11,10 @@ class AllUserTableComponent extends Component
     /**
      * Create a new component instance.
      */
-    public $dataHeader = null;
     public $dataBase = null;
 
-    public function __construct($dataHeader=null, $dataBase=null)
+    public function __construct($dataBase = null)
     {
-        $this->dataHeader = $dataHeader;
         $this->dataBase = $dataBase;
     }
 

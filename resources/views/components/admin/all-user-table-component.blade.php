@@ -1,33 +1,53 @@
 <table id="reportPage" class="stripe hover w-full text-sm text-left uppercase">
     <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
         <tr>
-            @foreach ($dataHeader ?? [] as $header)
-                <th class="{{ $header == 'actionTab' ? 'no-export' : '' }}">
-                    {{ ucwords(str_replace('_', ' ', $header ?? 'No Header')) }}</th>
-            @endforeach
+            <th>name</th>
+            <th>email</th>
+            <th>phone</th>
+            <th>role</th>
+            <th class="no-export">actionTab</th>
         </tr>
+
     </thead>
     <tbody>
         @foreach ($dataBase ?? [] as $item)
             <tr>
-                @foreach ($dataHeader ?? [] as $header)
-                    @if ($header == 'actionTab')
-                        <td class="flex space-x-3 justify-center items-center">
-                            <!-- Edit -->
-                            <a href="{{ Route('admin.addSchoolVacency', ['form' => 'update', 'schoolCode' => Crypt::encryptString($item['id'] ?? '')]) }}"
-                                title="Edit" class="text-green-600 hover:text-green-800">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5h2M6 19l1.5-1.5M16.5 3.5a2.121 2.121 0 113 3L8.414 17.586a2 2 0 01-1.414.586H5v-2a2 2 0 01.586-1.414L16.5 3.5z" />
-                                </svg>
-                            </a>
-                        </td>
-                    @else
-                        <td>{{ $item[$header] ?? 'No Data' }}</td>
-                    @endif
-                @endforeach
+                <td>{{ $item['name'] ?? 'No Data' }}</td>
+                <td>{{ $item['email'] ?? 'No Data' }}</td>
+                <td>{{ $item['phone'] ?? 'No Data' }}</td>
+                <td>{{ $item['user_roles']['roles']['name'] ?? 'No Data' }}</td>
+                <td class="flex space-x-3 justify-center items-center">
+                    <!-- Edit -->
+                    <button title="{{ ($item['active'] ?? null) == 1 ? 'Deactivate' : 'Activate' }} " id="user-deactive"
+                        data-user-status="{{ ($item['active'] ?? null) == 1 ? 2 : 1 }}"
+                        value="{{ Crypt::encryptString($item['id'] ?? null) }}" class="text-gray-600 hover:text-gray-800">
+                        <!-- Deactivate icon -->
+                        @if (($item['active'] ?? null) == 1)
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Outer capsule -->
+                                <path d="M17 6H7a6 6 0 1 0 0 12h10a6 6 0 0 0 0-12Z" fill="#d1d5db" fill-opacity=".25"
+                                    stroke="#9ca3af" stroke-width="1.8" stroke-miterlimit="10" />
 
+                                <!-- Knob on the left (OFF) -->
+                                <circle cx="7" cy="12" r="3.5" fill="#9ca3af" stroke="#6b7280"
+                                    stroke-width="2" />
+                            </svg>
+                        @else
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Outer capsule -->
+                                <path d="M17 6H7a6 6 0 1 0 0 12h10a6 6 0 0 0 0-12Z" fill="#4ade80" fill-opacity=".25"
+                                    stroke="#22c55e" stroke-width="1.8" stroke-miterlimit="10" />
+
+                                <!-- Bold inner knob (ON) -->
+                                <circle cx="17" cy="12" r="3.5" fill="#22c55e" stroke="#166534"
+                                    stroke-width="2" />
+                            </svg>
+                        @endif
+                    </button>
+
+                </td>
             </tr>
         @endforeach
     </tbody>

@@ -303,4 +303,18 @@ trait Reuseable
             ])
             ->get();
     }
+
+    // *** Check user by phone ***
+    public function checkUByPhone()
+    {
+        return User::where('phone', $this->userPhone)
+            ->exists();
+    }
+
+    // *** check user by ID ***
+    public function checkUserId()
+    {
+        return User::where('id', $this->userId)
+            ->exists();
+    }
 }
