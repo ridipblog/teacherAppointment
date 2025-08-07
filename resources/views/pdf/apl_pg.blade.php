@@ -69,7 +69,7 @@
             admissible under the Govt. rule and posted at <span
                 class="underline">{{ $candDetails->vacency_details->school_vacency->schoolName ?? '' }}</span> vice
             <span class="underline">{{ $candDetails->vacency_details->replcedPersion ?? '' }}</span>,
-            Retired/Expired/VRS/Transferred/Resigned.
+            {{ $candDetails->vacency_details->couseOfPost ?? 'Not Mention' }}.
         </p>
 
         <p>
@@ -113,8 +113,8 @@
                 <li>The F.A., Finance Department, BTC Kokrajhar.</li>
                 <li>The Treasury Officer, Kokrajhar / Gossaigaon / Bijni / Udalguri / Mushalpur/ Tamulpur/
                     Bhergaon/Kajalgaon.</li>
-                <li>The District Ele. Edn. Officer, {{ $candDetails->schoolDistrict ?? '..............' }}</li>
-                <li>The {{ $candDetails->ddoName ?? 'DDO Name' }}</li>
+                <li>The District Ele. Edn. Officer, {{ $candDetails->district ?? '..............' }}</li>
+                <li>The {{ $candDetails->ddo ?? 'DDO Name' }}</li>
                 <li>The Headmaster, {{ $candDetails->vacency_details->school_vacency->schoolName ?? '' }}</li>
                 <li>The person concerned. He/She is directed to join the school within 15 (fifteen) days from the date
                     of issue of this order failing which the appointment shall be treated as cancelled.</li>

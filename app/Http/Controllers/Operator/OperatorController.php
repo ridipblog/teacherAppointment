@@ -30,7 +30,7 @@ class OperatorController extends Controller
         try {
             $resData['candidateData'] = CandidateData::query()
                 ->with(['allpost'])
-                ->where('active',1)
+                ->where('active', 1)
                 ->get();
             $resData['statusCode'] = 200;
         } catch (Exception $err) {
@@ -42,40 +42,67 @@ class OperatorController extends Controller
         ]);
     }
 
-    // *** Current Vacency Page ***
-    public function CurrentVacency(Request $request)
+    // ***Vacency Districts List ***
+    public function cuurentVacencyDistricts(Request $request)
     {
         $resData = [
             'statusCode' => 400,
             'message' => null
         ];
         try {
-            $resData['currentVacency'] = CurrentVacency::query()
-                ->with([
-                    'school_vacency' => function ($query) {
-                        $query->where('postID', 1)
-                          ->where('isEnabled',1);
-                    },
-                    'school_vacency.allpost'
-                ])->whereHas('school_vacency', function ($query) {
-                    $query->where('postID', 1)
-                      ->where('isEnabled',1);
-                })
-                ->get();
-
-            $resData['currentVacency2'] = CurrentVacency::query()
-                ->with([
-                    'school_vacency' => function ($query) {
-                        $query->where('postID', 2)
-                          ->where('isEnabled',1);
-                    },
-                    'school_vacency.allpost'
-                ])->whereHas('school_vacency', function ($query) {
-                    $query->where('postID', 2)
-                      ->where('isEnabled',1);
-                })
+            $resData['districts'] = SchoolVacency::select('district')
+                ->distinct()
                 ->get();
             $resData['statusCode'] = 200;
+        } catch (Exception $err) {
+            $resData['message'] = "Server error please try later ";
+        }
+        return view(
+            'operator.current_vacency_districts',
+            compact('resData')
+        );
+    }
+    // *** Current Vacency Page ***
+    public function CurrentVacency(Request $request, $districts = null)
+    {
+        $resData = [
+            'statusCode' => 400,
+            'message' => null
+        ];
+        try {
+            if (!$districts) {
+                $resData['message'] = "District Name is required ";
+            } else {
+                $resData['currentVacency'] = CurrentVacency::query()
+                    ->with([
+                        'school_vacency' => function ($query) {
+                            $query->where('postID', 1)
+                                ->where('isEnabled', 1);
+                        },
+                        'school_vacency.allpost'
+                    ])
+                    ->whereHas('school_vacency', function ($query) use ($districts) {
+                        $query->where('postID', 1)
+                            ->where('isEnabled', 1)
+                            ->where('district', $districts);
+                    })
+                    ->get();
+
+                $resData['currentVacency2'] = CurrentVacency::query()
+                    ->with([
+                        'school_vacency' => function ($query) {
+                            $query->where('postID', 2)
+                                ->where('isEnabled', 1);
+                        },
+                        'school_vacency.allpost'
+                    ])->whereHas('school_vacency', function ($query) use ($districts) {
+                        $query->where('postID', 2)
+                            ->where('isEnabled', 1)
+                            ->where('district', $districts);
+                    })
+                    ->get();
+                $resData['statusCode'] = 200;
+            }
         } catch (Exception $err) {
             $resData['message'] = "Server error please try later ";
         }
@@ -108,9 +135,22 @@ class OperatorController extends Controller
 
                 $candRoll = Crypt::decryptString($candRoll);
                 $mainQuery = CandidateData::query()
-                    ->with(['allpost'])
+                    ->with([
+                        'allpost',
+                        'vacency_details' => function ($query) {
+                            $query->select(
+                                'id',
+                                'schoolCode'
+                            );
+                        },
+                        'vacency_details.school_vacency' => function ($query) {
+                            $query->select(
+                                'id',
+                            );
+                        }
+                    ])
                     ->where('rollNumber', $candRoll)
-                    ->where('active',1);
+                    ->where('active', 1);
                 if ($mainQuery->exists()) {
                     $candDetails = $mainQuery->first();
                     $resData['candDetails'] = $candDetails;
@@ -184,7 +224,7 @@ class OperatorController extends Controller
                     ])
                         ->where('schoolCode', $request->schoolCode ?? 0)
                         ->where('postID', $request->postID ?? 0)
-                      ->where('isEnabled',1)
+                        ->where('isEnabled', 1)
                         ->whereHas('current_vecancy', function ($query) {});
                     // ->whereHas('vacency_details',function($query){
                     //     $query->where('isAssined',0);
@@ -203,7 +243,7 @@ class OperatorController extends Controller
                                 // *** Fetched Candidate Data ***
                                 $candDetails = CandidateData::where('rollNumber', $candRoll)
                                     ->where('post', $request->postID ?? 0)
-                                    ->where('active',1)
+                                    ->where('active', 1)
                                     ->first();
 
                                 // *** Check Candidate Not Allocate ***
@@ -215,7 +255,7 @@ class OperatorController extends Controller
                                             ->where('schoolCode', $request->schoolCode ?? 0)
                                             ->where('postID', $request->postID ?? 0)
                                             ->where('medium', $candDetails->medium)
-                                          ->where('isEnabled',1)
+                                            ->where('isEnabled', 1)
                                             ->where('vacencyCategory', $candDetails->category)->exists();
                                         if (!$checkProcess) {
                                             $isProcess = false;
@@ -225,7 +265,7 @@ class OperatorController extends Controller
                                         $checkProcess = SchoolVacency::query()->with([])
                                             ->where('schoolCode', $request->schoolCode ?? 0)
                                             ->where('postID', $request->postID ?? 0)
-                                          ->where('isEnabled',1)
+                                            ->where('isEnabled', 1)
                                             ->where('vacencyCategory', $candDetails->subject)->exists();
                                         if (!$checkProcess) {
                                             $isProcess = false;
@@ -328,7 +368,7 @@ class OperatorController extends Controller
                     ->where([
                         ['rollNumber', $candRoll],
                         ['isAllocated', 1],
-                        ['active',1]
+                        ['active', 1]
                     ])->first();
 
                 if (($candDetails->post ?? 0) == 1) {

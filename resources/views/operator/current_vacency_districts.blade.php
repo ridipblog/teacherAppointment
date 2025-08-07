@@ -60,54 +60,15 @@
                     <table id="vacancyTable" class="stripe hover w-full text-sm text-left uppercase">
                         <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
                             <tr>
-                                <th>School Code</th>
-                                <th>School Name</th>
-                                <th>Post</th>
-                                <th>Post</th>
-                                <th>Medium</th>
-                                <th>Stream</th>
-                                <th>Remaing Vacency</th>
+                                <th>District Name</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($resData['currentVacency'] ?? [] as $data)
+                            @foreach ($resData['districts'] ?? [] as $district)
                                 <tr>
-                                    <td>{{ $data->school_vacency->schoolCode ?? null }}</td>
-                                    <td>{{ $data->school_vacency->schoolName ?? null }}</td>
-                                    <td>{{ $data->school_vacency->district ?? null }}</td>
-                                    <td>{{ $data->school_vacency->allpost->name ?? null }}</td>
-                                    <td>{{ $data->school_vacency->medium ?? null }}</td>
-                                    <td>{{ $data->school_vacency->vacencyCategory ?? null }}</td>
-                                    <td>{{ $data->remaingVacency ?? 0 }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Second Table (duplicate layout for example) -->
-                <div class="bg-white shadow border p-2 overflow-x-auto w-full lg:w-1/2">
-                    <table id="vacancyTable2" class="stripe hover w-full text-sm text-left uppercase">
-                        <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
-                            <tr>
-                                <th>School Code</th>
-                                <th>School Name</th>
-                                <th>District</th>
-                                <th>Post</th>
-                                <th>Subject</th>
-                                <th>Remaing Vacency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @foreach ($resData['currentVacency2'] ?? [] as $data)
-                                <tr>
-                                    <td>{{ $data->school_vacency->schoolCode ?? null }}</td>
-                                    <td>{{ $data->school_vacency->schoolName ?? null }}</td>
-                                    <td>{{ $data->school_vacency->district ?? null }}</td>
-                                    <td>{{ $data->school_vacency->allpost->name ?? null }}</td>
-                                    <td>{{ $data->school_vacency->vacencyCategory ?? null }}</td>
-                                    <td>{{ $data->remaingVacency ?? 0 }}</td>
+                                    <td>
+                                        <a href="{{ Route('operator.CurrentVacency',['districts'=>$district->district ?? null]) }}">{{ $district->district ?? null }}</a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
