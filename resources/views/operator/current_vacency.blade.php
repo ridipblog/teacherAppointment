@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('refressMeta')
-    <meta http-equiv="refresh" content="30">
+    <!-- <meta http-equiv="refresh" content="20"> -->
 @endsection
 @section('title', 'Operator Dashboard')
 
@@ -17,7 +17,7 @@
             </div>
 
             <!-- Tabs -->
-            <div class="mt-4 flex space-x-4 border-b border-blue-700">
+            <!-- <div class="mt-4 flex space-x-4 border-b border-blue-700">
                 <a href="{{ route('operator.index') }}" id="tabCandidate"
                     class="py-2 px-4 text-sm font-medium border-b-2 border-transparent hover:border-white focus:outline-none">
                     Candidates
@@ -26,7 +26,7 @@
                     class="py-2 px-4 text-sm font-medium border-b-2 border-white focus:outline-none">
                     Vacancy
                 </a href="">
-            </div>
+            </div> -->
         </div>
     </header>
     @if (($resData['statusCode'] ?? 400) == 400)
@@ -49,72 +49,94 @@
     @else
         <!-- Main Content -->
         <main class="max-w-7xl mx-auto px-4 py-6">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold text-blue-800">Vacancy Records Overview</h2>
+    <div class="mb-6 text-center">
+        <h2 class="text-2xl font-bold text-blue-800">Vacancy Records Overview</h2>
+        <div class="flex items-center justify-between mb-4">
+    <p class="text-gray-500 text-">Please refresh the page to see the latest records.</p>
+    <button onclick="window.location.reload()" 
+        class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"> <i class="bi bi-arrow-repeat mr-1"></i>
+        Refresh Now
+    </button>
+</div>
+    </div>
+
+    <!-- Flex container -->
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- First Card -->
+        <div class="bg-white shadow-md rounded-lg border w-full lg:w-1/2">
+            <!-- Card Header -->
+            <div class="px-4 py-2 border-b bg-blue-100 text-blue-800 font-bold uppercase text-sm">
+                Current Vacancy (Set 1)
             </div>
 
-            <!-- Flex container for two tables -->
-            <div class="flex flex-col lg:flex-row gap-6">
-                <!-- First Table -->
-                <div class="bg-white shadow border p-2 overflow-x-auto w-full lg:w-1/2">
-                    <table id="vacancyTable" class="stripe hover w-full text-sm text-left uppercase">
-                        <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
+            <!-- Card Body -->
+            <div class="p-2 overflow-x-auto">
+                <table id="vacancyTable" class="stripe hover w-full text-sm text-left uppercase">
+                    <thead class="bg-blue-50 text-blue-700 text-xs font-semibold">
+                        <tr>
+                            <th>School Code</th>
+                            <th>School Name</th>
+                            <th>District</th>
+                            <th>Post</th>
+                            <th>Medium</th>
+                            <th>Stream</th>
+                            <th class="text-center">Vacancy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($resData['currentVacency'] ?? [] as $data)
                             <tr>
-                                <th>School Code</th>
-                                <th>School Name</th>
-                                <th>Post</th>
-                                <th>Post</th>
-                                <th>Medium</th>
-                                <th>Stream</th>
-                                <th>Remaing Vacency</th>
+                                <td>{{ $data->school_vacency->schoolCode ?? null }}</td>
+                                <td>{{ $data->school_vacency->schoolName ?? null }}</td>
+                                <td>{{ $data->school_vacency->district ?? null }}</td>
+                                <td>{{ $data->school_vacency->allpost->name ?? null }}</td>
+                                <td>{{ $data->school_vacency->medium ?? null }}</td>
+                                <td>{{ $data->school_vacency->vacencyCategory ?? null }}</td>
+                                <td class="text-center font-semibold text-blue-700">{{ $data->remaingVacency ?? 0 }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($resData['currentVacency'] ?? [] as $data)
-                                <tr>
-                                    <td>{{ $data->school_vacency->schoolCode ?? null }}</td>
-                                    <td>{{ $data->school_vacency->schoolName ?? null }}</td>
-                                    <td>{{ $data->school_vacency->district ?? null }}</td>
-                                    <td>{{ $data->school_vacency->allpost->name ?? null }}</td>
-                                    <td>{{ $data->school_vacency->medium ?? null }}</td>
-                                    <td>{{ $data->school_vacency->vacencyCategory ?? null }}</td>
-                                    <td>{{ $data->remaingVacency ?? 0 }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Second Table (duplicate layout for example) -->
-                <div class="bg-white shadow border p-2 overflow-x-auto w-full lg:w-1/2">
-                    <table id="vacancyTable2" class="stripe hover w-full text-sm text-left uppercase">
-                        <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
-                            <tr>
-                                <th>School Code</th>
-                                <th>School Name</th>
-                                <th>District</th>
-                                <th>Post</th>
-                                <th>Subject</th>
-                                <th>Remaing Vacency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @foreach ($resData['currentVacency2'] ?? [] as $data)
-                                <tr>
-                                    <td>{{ $data->school_vacency->schoolCode ?? null }}</td>
-                                    <td>{{ $data->school_vacency->schoolName ?? null }}</td>
-                                    <td>{{ $data->school_vacency->district ?? null }}</td>
-                                    <td>{{ $data->school_vacency->allpost->name ?? null }}</td>
-                                    <td>{{ $data->school_vacency->vacencyCategory ?? null }}</td>
-                                    <td>{{ $data->remaingVacency ?? 0 }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </main>
+        </div>
+
+        <!-- Second Card -->
+        <div class="bg-white shadow-md rounded-lg border w-full lg:w-1/2">
+            <!-- Card Header -->
+            <div class="px-4 py-2 border-b bg-blue-100 text-blue-800 font-bold uppercase text-sm">
+                Current Vacancy (Set 2)
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-2 overflow-x-auto">
+                <table id="vacancyTable2" class="stripe hover w-full text-sm text-left uppercase">
+                    <thead class="bg-blue-50 text-blue-700 text-xs font-semibold">
+                        <tr>
+                            <th>School Code</th>
+                            <th>School Name</th>
+                            <th>District</th>
+                            <th>Post</th>
+                            <th>Subject</th>
+                            <th class="text-center">Vacancy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($resData['currentVacency2'] ?? [] as $data)
+                            <tr>
+                                <td>{{ $data->school_vacency->schoolCode ?? null }}</td>
+                                <td>{{ $data->school_vacency->schoolName ?? null }}</td>
+                                <td>{{ $data->school_vacency->district ?? null }}</td>
+                                <td>{{ $data->school_vacency->allpost->name ?? null }}</td>
+                                <td>{{ $data->school_vacency->vacencyCategory ?? null }}</td>
+                                <td class="text-center font-semibold text-blue-700">{{ $data->remaingVacency ?? 0 }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
 
     @endif
 

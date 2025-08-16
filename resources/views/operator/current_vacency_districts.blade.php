@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('refressMeta')
-    <meta http-equiv="refresh" content="30">
+    <!-- <meta http-equiv="refresh" content="30"> -->
 @endsection
 @section('title', 'Operator Dashboard')
 
@@ -17,7 +17,7 @@
             </div>
 
             <!-- Tabs -->
-            <div class="mt-4 flex space-x-4 border-b border-blue-700">
+            <!-- <div class="mt-4 flex space-x-4 border-b border-blue-700">
                 <a href="{{ route('operator.index') }}" id="tabCandidate"
                     class="py-2 px-4 text-sm font-medium border-b-2 border-transparent hover:border-white focus:outline-none">
                     Candidates
@@ -26,7 +26,7 @@
                     class="py-2 px-4 text-sm font-medium border-b-2 border-white focus:outline-none">
                     Vacancy
                 </a href="">
-            </div>
+            </div> -->
         </div>
     </header>
     @if (($resData['statusCode'] ?? 400) == 400)
@@ -48,34 +48,34 @@
         </div>
     @else
         <!-- Main Content -->
-        <main class="max-w-7xl mx-auto px-4 py-6">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold text-blue-800">Vacancy Records Overview</h2>
-            </div>
+        <main class="max-w-7xl mx-auto w-full px-4 py-6 flex flex-col items-center">
+    <!-- Page Heading -->
+    <div class="mb-6 text-center">
+        <h2 class="text-2xl font-bold text-blue-800">Vacancy Records Overview</h2>
+        <p class="text-sm text-gray-500">Select a district to view current vacancies</p>
+    </div>
 
-            <!-- Flex container for two tables -->
-            <div class="flex flex-col lg:flex-row gap-6">
-                <!-- First Table -->
-                <div class="bg-white shadow border p-2 overflow-x-auto w-full lg:w-1/2">
-                    <table id="vacancyTable" class="stripe hover w-full text-sm text-left uppercase">
-                        <thead class="bg-blue-100 text-blue-800 uppercase text-xs font-bold">
-                            <tr>
-                                <th>District Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($resData['districts'] ?? [] as $district)
-                                <tr>
-                                    <td>
-                                        <a href="{{ Route('operator.CurrentVacency',['districts'=>$district->district ?? null]) }}">{{ $district->district ?? null }}</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
+    <!-- Parent Card (Centered) -->
+    <div class="bg-white shadow-lg rounded-2xl border w-full max-w-xs">
+        <!-- Card Header -->
+        <div class="px-5 py-3 border-b bg-blue-100 text-blue-800 font-bold uppercase text-sm rounded-t-2xl">
+            Districts
+        </div>
+
+        <!-- Card Body with List Group -->
+        <ul class="divide-y divide-gray-200">
+            @foreach ($resData['districts'] ?? [] as $district)
+                <li>
+                    <a href="{{ Route('operator.CurrentVacency', ['districts' => $district->district ?? null]) }}"
+                       class="block px-6 py-4 text-blue-600 hover:text-blue-800 hover:bg-blue-50 transition rounded-b-2xl flex items-center justify-between gap-4">
+                        <span>{{ $district->district ?? 'Unknown' }}</span><span><i class="bi bi-arrow-right"></i></span>
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</main>
+
 
     @endif
 
