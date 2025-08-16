@@ -145,7 +145,7 @@
             <li>The Treasury Officer, Kokrajhar / Gossaigaon / Bijni / Udalguri / Mushalpur/ Tamulpur/ Bhergaon/Kajalgaon.</li>
             <li>The District Ele. Edn. Officer, {{ $candDetails->vacency_details->school_vacency->district ?? '..............' }}</li>
             <li>The {{ $candDetails->vacency_details->ddo ?? 'DDO Name' }}</li>
-            <li>The Headmaster, {{ $candDetails->vacency_details->school_vacency->schoolName ?? '' }}</li>
+            <li>The Headmaster, {{ $candDetails->vacency_details->school_vacency->schoolName ?? '' }} , {{ $candDetails->vacency_details->school_vacency->district ?? '..............' }}</li>
             <li>The person concerned. He/She is directed to join the school within 15 (fifteen) days from the date of
                 issue of this order failing which the appointment shall be treated as cancelled.</li>
             <li>Office guard file.</li>

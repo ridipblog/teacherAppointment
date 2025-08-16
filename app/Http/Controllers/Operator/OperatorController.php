@@ -62,13 +62,15 @@ class OperatorController extends Controller
             compact('resData')
         );
     }
+    
     // *** Current Vacency Page ***
-    public function CurrentVacency(Request $request, $districts = null)
+    public function CurrentVacency(Request $request, $districts = null,$isSlide=null)
     {
         $resData = [
             'statusCode' => 400,
             'message' => null
         ];
+
         try {
             if (!$districts) {
                 $resData['message'] = "District Name is required ";
@@ -106,8 +108,8 @@ class OperatorController extends Controller
         } catch (Exception $err) {
             $resData['message'] = "Server error please try later ";
         }
-
-        return view('operator.current_vacency', [
+        $viewPage=$isSlide ? 'operator.slide_current_vacency' : 'operator.current_vacency';
+        return view($viewPage, [
             'resData' => $resData
         ]);
     }

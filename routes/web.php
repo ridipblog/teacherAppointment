@@ -30,7 +30,7 @@ Route::group(['prefix' => 'operator', 'middleware' => ['buglock.role:web,view,us
 // *** Vacency Districts ROutes ***
 Route::get('/cuurent-vacency-districts',[OperatorController::class,'cuurentVacencyDistricts'])->name('operator.cuurentVacencyDistricts');
 // *** Current Vacency Page ***
-Route::get('/cuurent-vacency/{districts?}',[OperatorController::class, 'CurrentVacency'])->name('operator.CurrentVacency');
+Route::get('/cuurent-vacency/{districts?}/{isSlide?}/',[OperatorController::class, 'CurrentVacency'])->name('operator.CurrentVacency');
 
 // *** End Public Routes ***
 
