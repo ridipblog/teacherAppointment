@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Operator\OperatorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,14 @@ Route::group(['prefix' => 'operator', 'middleware' => ['buglock.role:web,view,us
     require __DIR__ . '/Operator/operatorRoutes.php';
 });
 
+// *** Start Public Routes ***
+
+// *** Vacency Districts ROutes ***
+Route::get('/cuurent-vacency-districts',[OperatorController::class,'cuurentVacencyDistricts'])->name('operator.cuurentVacencyDistricts');
+// *** Current Vacency Page ***
+Route::get('/cuurent-vacency/{districts?}',[OperatorController::class, 'CurrentVacency'])->name('operator.CurrentVacency');
+
+// *** End Public Routes ***
 
 Route::group(['prefix' => 'operator', 'middleware' => ['buglock.role:web,api,user']], function () {
     // *** All Operator Ppst Routes ***

@@ -82,7 +82,7 @@
 
 
             <div class="flex items-center justify-center mt-6">
-                <a href="{{ route('operator.downloadAppoint', ['candRoll' => $resData['candRoll'] ?? null]) }}" download
+                <a href="{{ route('operator.downloadAppoint', ['candRoll' => $resData['candRoll'] ?? null]) }}" 
                     class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition duration-200 {{$resData['candDetails']->isAllocated == 1 ?'' : 'hidden'}}" id="download-appoint">
                     ⬇️ Download PDF
                 </a>

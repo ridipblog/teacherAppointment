@@ -19,7 +19,7 @@ class Reuseable {
     };
 
     // *** confirmation Swal ***
-    confirmSwal = async ($message) => {
+    confirmSwal = async ($message,confirmText=null) => {
         return Swal.fire({
             title: 'Are you sure?',
             text: $message,
@@ -27,7 +27,7 @@ class Reuseable {
             showCancelButton: true,
             confirmButtonColor: '#2563EB', // Tailwind blue-600
             cancelButtonColor: '#DC2626',  // Tailwind red-600
-            confirmButtonText: 'Yes, allocate',
+            confirmButtonText: `Yes, ${confirmText ?? 'Allocate'}`,
             cancelButtonText: 'Cancel'
         });
 

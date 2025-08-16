@@ -266,10 +266,15 @@ class OperatorController extends Controller
                                             ->where('schoolCode', $request->schoolCode ?? 0)
                                             ->where('postID', $request->postID ?? 0)
                                             ->where('isEnabled', 1)
-                                            ->where('vacencyCategory', $candDetails->subject)->exists();
+                                            // ->where('vacencyCategory', $candDetails->subject)
+
+                                            // *** New Code v3 ***
+                                            ->where('medium', $candDetails->medium)
+                                            ->where('vacencyCategory', $candDetails->category)
+                                            ->exists();
                                         if (!$checkProcess) {
                                             $isProcess = false;
-                                            $resData['message'] = "Subject does not match !";
+                                            $resData['message'] = "Subject and Medium does not match !";
                                         }
                                     } else {
                                         $isProcess = false;
@@ -352,7 +357,11 @@ class OperatorController extends Controller
                         $query->select(
                             'id',
                             'schoolCode',
-                            'replcedPersion'
+                            'replcedPersion',
+                            'replaceReason',
+                            'ecfNO',
+                            'groupNo',
+                            'ddo'
                         );
                     },
                     'vacency_details.school_vacency' => function ($query) {
@@ -372,12 +381,14 @@ class OperatorController extends Controller
                     ])->first();
 
                 if (($candDetails->post ?? 0) == 1) {
-                    $pdf = Pdf::loadView('pdf.apl_ug', compact('candDetails'));
+                    // $pdf = Pdf::loadView('pdf.apl_ug', compact('candDetails'));
+                    return view('pdf.apl_ug', compact('candDetails'));
                 } else {
-                    $pdf = Pdf::loadView('pdf.apl_pg', compact('candDetails'));
+                    // $pdf = Pdf::loadView('pdf.apl_pg', compact('candDetails'));
+                    return view('pdf.apl_pg', compact('candDetails'));
                 }
-                $pdf->setPaper('legal', 'portrait');
-                return $pdf->download('candidate-' . ($candDetails->rollNumber ?? '00000') . '.pdf');
+                // $pdf->setPaper('legal', 'portrait');
+                // return $pdf->stream('candidate-' . ($candDetails->rollNumber ?? '00000') . '.pdf');
             } else {
                 $resData['message'] = "Candidate roll required !";
             }

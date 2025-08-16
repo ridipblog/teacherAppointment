@@ -16,7 +16,11 @@ class VacencyDetails extends Model
         'post',
         'vacencyCode',
         'replcedPersion',
-        'isAssined'
+        'replaceReason',
+        'isAssined',
+        'ecfNO',
+        'groupNo',
+        'ddo'
     ];
 
     public function school_vacency(){

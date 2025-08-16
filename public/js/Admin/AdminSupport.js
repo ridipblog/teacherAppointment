@@ -170,7 +170,7 @@ class AdminSupport extends RequestSupport {
         try {
             let btnHtml = actionBtn.html();
             reuseableObj.processingStatus(actionBtn);
-            let confirm = await reuseableObj.confirmSwal("Are you sure you want to revert?");
+            let confirm = await reuseableObj.confirmSwal("Are you sure you want to revert?","Revert");
             if (confirm.isConfirmed) {
                 let candidateId = actionBtn.val();
                 var form_data = new FormData();
