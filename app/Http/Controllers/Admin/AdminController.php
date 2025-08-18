@@ -59,10 +59,10 @@ class AdminController extends Controller
             $viewData['counts']['AssignedCandDetailsWithUser'] = AssignedCandDetailsWithUser::count();
 
             // *** Report remaining vacency pg ***
-            $viewData['counts']['ReportRemainingVacancyPg'] = ReportRemainingVacancyPg::count();
+            $viewData['counts']['ReportRemainingVacancyPg'] = ReportRemainingVacancyPg::sum('Vacancy');
 
             // *** Report remaining vacency ug ***
-            $viewData['counts']['ReportRemainingVacancyUg'] = ReportRemainingVacancyUg::count();
+            $viewData['counts']['ReportRemainingVacancyUg'] = ReportRemainingVacancyUg::sum('Vacancy');
 
             // *** Report selected candidate pg ***
             $viewData['counts']['ReportSelectedCandidatePg'] = ReportSelectedCandidatePg::count();
